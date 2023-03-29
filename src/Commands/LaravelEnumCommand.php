@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace BiiiiiigMonster\\LaravelEnum\LaravelEnum\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelEnumCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-enum';
 
     public $description = 'My command';
 
