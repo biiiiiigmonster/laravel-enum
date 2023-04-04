@@ -28,7 +28,7 @@ trait EnumTraits
             }
         }
 
-        throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
+        throw new ValueError('"'.$name.'" is not a valid name for enum "'.static::class.'"');
     }
 
     public static function names(): array
@@ -63,14 +63,14 @@ trait EnumTraits
 
     public static function fromName(string $case): static
     {
-        return static::tryFromName($case) ?? throw new ValueError('"' . $case . '" is not a valid name for enum "' . static::class . '"');
+        return static::tryFromName($case) ?? throw new ValueError('"'.$case.'" is not a valid name for enum "'.static::class.'"');
     }
 
     public static function tryFromName(string $case): ?static
     {
         $cases = array_filter(
             static::cases(),
-            fn($c) => $c->name === $case
+            fn ($c) => $c->name === $case
         );
 
         return array_values($cases)[0] ?? null;
@@ -80,18 +80,19 @@ trait EnumTraits
     {
         return collect(static::cases())->first(function (UnitEnum $case) use ($metaProperty) {
             $reflection = new ReflectionEnumUnitCase($case, $case->name);
+
             return collect($reflection->getAttributes())
-                ->map(fn(ReflectionAttribute $attr) => $attr->newInstance())
-                ->filter(fn($attr) => $attr instanceof MetaProperty)
-                ->first(fn(MetaProperty $attr) => $attr->value === $metaProperty->value);
+                ->map(fn (ReflectionAttribute $attr) => $attr->newInstance())
+                ->filter(fn ($attr) => $attr instanceof MetaProperty)
+                ->first(fn (MetaProperty $attr) => $attr->value === $metaProperty->value);
         });
     }
 
     public static function fromMeta(MetaProperty $metaProperty): static
     {
         return static::tryFromMeta($metaProperty) ?? throw new ValueError(
-            'Enum ' . static::class . ' does not have a case with a meta property "' .
-            $metaProperty::class . '" of value "' . $metaProperty->value . '"'
+            'Enum '.static::class.' does not have a case with a meta property "'.
+            $metaProperty::class.'" of value "'.$metaProperty->value.'"'
         );
     }
 
@@ -100,8 +101,8 @@ trait EnumTraits
         $reflection = new ReflectionEnumUnitCase($this, $this->name);
 
         return collect($reflection->getAttributes())
-            ->map(fn(ReflectionAttribute $attr) => $attr->newInstance())
-            ->filter(fn($attr) => $attr instanceof MetaProperty)
-            ->first(fn(MetaProperty $attr) => $attr::method() === $property);
+            ->map(fn (ReflectionAttribute $attr) => $attr->newInstance())
+            ->filter(fn ($attr) => $attr instanceof MetaProperty)
+            ->first(fn (MetaProperty $attr) => $attr::method() === $property);
     }
 }

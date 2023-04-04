@@ -2,9 +2,9 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Tests;
 
+use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'BiiiiiigMonster\\LaravelEnum\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'BiiiiiigMonster\\LaravelEnum\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
