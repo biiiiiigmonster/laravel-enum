@@ -1,10 +1,10 @@
 <?php
 
-namespace BiiiiiigMonster\\LaravelEnum\LaravelEnum\Tests;
+namespace BiiiiiigMonster\LaravelEnum\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use BiiiiiigMonster\\LaravelEnum\LaravelEnum\LaravelEnumServiceProvider;
+use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'BiiiiiigMonster\\LaravelEnum\\LaravelEnum\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn(string $modelName) => 'BiiiiiigMonster\\LaravelEnum\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            LaravelEnumServiceProvider::class,
+            EnumServiceProvider::class,
         ];
     }
 

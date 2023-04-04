@@ -1,5 +1,5 @@
 <?php
 
-use BiiiiiigMonster\\LaravelEnum\LaravelEnum\Tests\TestCase;
+use BiiiiiigMonster\LaravelEnum\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
