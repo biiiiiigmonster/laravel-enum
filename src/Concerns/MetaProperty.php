@@ -6,8 +6,7 @@ abstract class MetaProperty
 {
     final public function __construct(
         public mixed $value,
-    )
-    {
+    ) {
         $this->value = $this->transform($value);
     }
 
