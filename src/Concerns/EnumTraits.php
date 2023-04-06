@@ -3,6 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
+use Illuminate\Support\Collection;
 use ReflectionAttribute;
 use ReflectionEnumUnitCase;
 use UnitEnum;
@@ -15,20 +16,20 @@ trait EnumTraits
 {
     public function __invoke()
     {
-        return $this instanceof BackedEnum ? $this->value : $this->name;
+        return self::call($this);
     }
 
     public static function __callStatic($name, $args)
     {
-        $cases = static::cases();
+        $case = collect(static::cases())->first(fn(UnitEnum $case) => $case->name === $name)
+            ?? throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
 
-        foreach ($cases as $case) {
-            if ($case->name === $name) {
-                return $case instanceof BackedEnum ? $case->value : $case->name;
-            }
-        }
+        return self::call($case);
+    }
 
-        throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
+    private static function call(UnitEnum $case): mixed
+    {
+        return $case instanceof BackedEnum ? $case->value : $case->name;
     }
 
     public static function names(): array
@@ -38,53 +39,30 @@ trait EnumTraits
 
     public static function values(): array
     {
-        return array_column(static::cases(),
-            static::class instanceof BackedEnum ? 'value' : 'name');
+        if (!static::class instanceof BackedEnum) {
+            return static::names();
+        }
+
+        return array_column(static::cases(), 'value');
     }
 
     public static function options(): array
     {
-        $cases = static::cases();
+        if (!static::class instanceof BackedEnum) {
+            return static::names();
+        }
 
-        return static::class instanceof BackedEnum
-            ? array_column($cases, 'value', 'name')
-            : array_column($cases, 'name');
+        return array_column(static::cases(), 'value', 'name');
     }
 
-    public static function from(string $case): static
+    public static function fromName(string $name): static
     {
-        return static::fromName($case);
+        return static::tryFromName($name) ?? throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
     }
 
-    public static function tryFrom(string $case): ?static
+    public static function tryFromName(string $name): ?static
     {
-        return static::tryFromName($case);
-    }
-
-    public static function fromName(string $case): static
-    {
-        return static::tryFromName($case) ?? throw new ValueError('"' . $case . '" is not a valid name for enum "' . static::class . '"');
-    }
-
-    public static function tryFromName(string $case): ?static
-    {
-        $cases = array_filter(
-            static::cases(),
-            fn($c) => $c->name === $case
-        );
-
-        return array_values($cases)[0] ?? null;
-    }
-
-    public static function tryFromMeta(MetaProperty $metaProperty): ?static
-    {
-        return collect(static::cases())->first(function (UnitEnum $case) use ($metaProperty) {
-            $reflection = new ReflectionEnumUnitCase($case, $case->name);
-            return collect($reflection->getAttributes())
-                ->map(fn(ReflectionAttribute $attr) => $attr->newInstance())
-                ->filter(fn($attr) => $attr instanceof MetaProperty)
-                ->first(fn(MetaProperty $attr) => $attr->value === $metaProperty->value);
-        });
+        return collect(static::cases())->first(fn(UnitEnum $case) => $case->name === $name);
     }
 
     public static function fromMeta(MetaProperty $metaProperty): static
@@ -95,13 +73,29 @@ trait EnumTraits
         );
     }
 
+    public static function tryFromMeta(MetaProperty $metaProperty): ?static
+    {
+        return collect(static::cases())
+            ->first(fn(UnitEnum $case) => self::caseMeta($case)
+                ->filter(fn(MetaProperty $attr) => $attr::class === $metaProperty::class)
+                ->contains(fn(MetaProperty $attr) => $attr->value === $metaProperty->value)
+            );
+    }
+
     public function __call(string $property, $arguments): mixed
     {
-        $reflection = new ReflectionEnumUnitCase($this, $this->name);
+        $attr = self::caseMeta($this)
+            ->first(fn(MetaProperty $attr) => $attr::method() === $property);
+
+        return $attr?->value;
+    }
+
+    private static function caseMeta(UnitEnum $case): Collection
+    {
+        $reflection = new ReflectionEnumUnitCase($case, $case->name);
 
         return collect($reflection->getAttributes())
-            ->map(fn(ReflectionAttribute $attr) => $attr->newInstance())
-            ->filter(fn($attr) => $attr instanceof MetaProperty)
-            ->first(fn(MetaProperty $attr) => $attr::method() === $property);
+            ->map(fn(ReflectionAttribute $refAttr) => $refAttr->newInstance())
+            ->filter(fn($attr) => $attr instanceof MetaProperty);
     }
 }
