@@ -25,11 +25,11 @@ abstract class MetaProperty
     /** Get the name of the accessor method */
     public static function method(): string
     {
-        return str(static::class)->afterLast("\\")->lcfirst();
+        return str(static::class)->afterLast('\\')->lcfirst();
     }
 
     public static function getLocalizationKey(): string
     {
-        return 'enums.' . static::class;
+        return 'enums.'.static::class;
     }
 }

@@ -4,8 +4,8 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Lang;
 use ReflectionAttribute;
 use ReflectionEnumUnitCase;
 use UnitEnum;
@@ -24,8 +24,8 @@ trait EnumTraits
     public static function __callStatic($name, $args): int|string
     {
         $case = collect(static::cases())
-            ->first(fn(UnitEnum $case) => $case->name === $name)
-            ?? throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
+            ->first(fn (UnitEnum $case) => $case->name === $name)
+            ?? throw new ValueError('"'.$name.'" is not a valid name for enum "'.static::class.'"');
 
         return self::call($case);
     }
@@ -42,7 +42,7 @@ trait EnumTraits
 
     public static function values(): array
     {
-        if (!is_subclass_of(static::class, BackedEnum::class)) {
+        if (! is_subclass_of(static::class, BackedEnum::class)) {
             return static::names();
         }
 
@@ -51,7 +51,7 @@ trait EnumTraits
 
     public static function options(?string $meta = null): array
     {
-        if (!is_subclass_of(static::class, BackedEnum::class)) {
+        if (! is_subclass_of(static::class, BackedEnum::class)) {
             return static::names();
         }
 
@@ -60,49 +60,49 @@ trait EnumTraits
         }
 
         return collect(static::cases())
-            ->map(fn(UnitEnum $case) => [
+            ->map(fn (UnitEnum $case) => [
                 'name' => $case->name,
                 'meta' => self::localized(
                     self::caseMetaProperties($case)
-                        ->first(fn(MetaProperty $attr) => $attr::class === $meta)
-                )
+                        ->first(fn (MetaProperty $attr) => $attr::class === $meta)
+                ),
             ])
             ->pluck('meta', 'name');
     }
 
     public static function fromName(string $name): static
     {
-        return static::tryFromName($name) ?? throw new ValueError('"' . $name . '" is not a valid name for enum "' . static::class . '"');
+        return static::tryFromName($name) ?? throw new ValueError('"'.$name.'" is not a valid name for enum "'.static::class.'"');
     }
 
     public static function tryFromName(string $name): ?static
     {
-        return collect(static::cases())->first(fn(UnitEnum $case) => $case->name === $name);
+        return collect(static::cases())->first(fn (UnitEnum $case) => $case->name === $name);
     }
 
     public static function fromMeta(MetaProperty $metaProperty): static
     {
         return static::tryFromMeta($metaProperty) ?? throw new ValueError(
-            'Enum ' . static::class . ' does not have a case with a meta property "' .
-            $metaProperty::class . '" of value "' . $metaProperty->value . '"'
+            'Enum '.static::class.' does not have a case with a meta property "'.
+            $metaProperty::class.'" of value "'.$metaProperty->value.'"'
         );
     }
 
     public static function tryFromMeta(MetaProperty $metaProperty): ?static
     {
         return collect(static::cases())
-            ->first(fn(UnitEnum $case) => self::caseMetaProperties($case)
-                ->filter(fn(MetaProperty $attr) => $attr::class === $metaProperty::class)
-                ->contains(fn(MetaProperty $attr) => $attr->value === $metaProperty->value)
+            ->first(fn (UnitEnum $case) => self::caseMetaProperties($case)
+                ->filter(fn (MetaProperty $attr) => $attr::class === $metaProperty::class)
+                ->contains(fn (MetaProperty $attr) => $attr->value === $metaProperty->value)
             );
     }
 
     public function __call(string $property, $arguments): mixed
     {
         $attr = self::caseMetaProperties($this)
-            ->first(fn(MetaProperty $attr) => $attr::method() === $property)
+            ->first(fn (MetaProperty $attr) => $attr::method() === $property)
             ?? throw new ValueError(
-                'Enum ' . $this::class . ' does not have a case with a meta property "' . $property . '"'
+                'Enum '.$this::class.' does not have a case with a meta property "'.$property.'"'
             );
 
         return self::localized($attr);
@@ -122,8 +122,8 @@ trait EnumTraits
         $reflection = new ReflectionEnumUnitCase($case, $case->name);
 
         return collect($reflection->getAttributes())
-            ->map(fn(ReflectionAttribute $refAttr) => $refAttr->newInstance())
-            ->filter(fn($attr) => $attr instanceof MetaProperty);
+            ->map(fn (ReflectionAttribute $refAttr) => $refAttr->newInstance())
+            ->filter(fn ($attr) => $attr instanceof MetaProperty);
     }
 
     public static function random(): static
