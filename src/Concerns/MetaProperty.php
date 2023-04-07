@@ -25,12 +25,11 @@ abstract class MetaProperty
     /** Get the name of the accessor method */
     public static function method(): string
     {
-        if (property_exists(static::class, 'method')) {
-            return static::${'method'};
-        }
+        return str(static::class)->afterLast("\\")->lcfirst();
+    }
 
-        $parts = explode('\\', static::class);
-
-        return lcfirst(end($parts));
+    public static function getLocalizationKey(): string
+    {
+        return 'enums.' . static::class;
     }
 }

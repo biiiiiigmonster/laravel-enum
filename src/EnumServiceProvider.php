@@ -1,6 +1,6 @@
 <?php
 
-namespace BiiiiiigMonster\LaravelEnum\LaravelEnum;
+namespace BiiiiiigMonster\LaravelEnum;
 
 use Illuminate\Support\ServiceProvider;
 
