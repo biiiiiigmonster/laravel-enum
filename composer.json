@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/framework": "^10.0"
+        "laravel/framework": "^10.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
