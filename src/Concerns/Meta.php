@@ -2,7 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
-abstract class MetaProperty
+abstract class Meta
 {
     final public function __construct(
         public mixed $value,
