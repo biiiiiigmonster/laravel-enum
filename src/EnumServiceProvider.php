@@ -19,10 +19,8 @@ class EnumServiceProvider extends ServiceProvider
 
     private function bootCommands()
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                EnumAnnotateCommand::class,
-            ]);
+        if ($this->app->runningInConsole() && $this->app->isLocal()) {
+            $this->commands(EnumAnnotateCommand::class);
         }
     }
 
