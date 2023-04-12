@@ -12,20 +12,20 @@ class EnumMeta implements Rule
 {
     public function __construct(protected string $enum, protected ?string $meta = null)
     {
-        if (!is_subclass_of($this->enum, UnitEnum::class)) {
+        if (! is_subclass_of($this->enum, UnitEnum::class)) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
-        if (!in_array(EnumTraits::class, class_uses($this->enum))) {
+        if (! in_array(EnumTraits::class, class_uses($this->enum))) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
-        if ($this->meta && !is_subclass_of($this->meta, Meta::class)) {
+        if ($this->meta && ! is_subclass_of($this->meta, Meta::class)) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
     }
 
     public function passes($attribute, $value)
     {
-        return !is_null($this->meta
+        return ! is_null($this->meta
                 ? $this->enum::tryFromMeta(new $this->meta($value))
                 : $this->enum::tryFromMetaMethod($value, $attribute)
             );

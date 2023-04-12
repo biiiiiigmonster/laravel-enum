@@ -7,7 +7,9 @@ use BiiiiiigMonster\LaravelEnum\Tests\TestCase;
 uses(TestCase::class)->in(__DIR__);
 
 #[Attribute]
-class Color extends Meta {}
+class Color extends Meta
+{
+}
 
 #[Attribute]
 class Desc extends Meta

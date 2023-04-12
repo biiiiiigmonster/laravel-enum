@@ -44,9 +44,9 @@ class EnumServiceProvider extends ServiceProvider
     private function bootTranslations()
     {
         $this->publishes([
-            __DIR__ . '/../lang' => $this->app->langPath('vendor/laravelEnum'),
+            __DIR__.'/../lang' => $this->app->langPath('vendor/laravelEnum'),
         ], 'translations');
 
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'laravelEnum');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'laravelEnum');
     }
 }

@@ -156,7 +156,7 @@ trait EnumTraits
     {
         return collect(static::cases())
             ->map(fn (UnitEnum $case) => self::caseMetaAttributes($case)
-                ->map(fn(Meta $meta) => $meta::method())
+                ->map(fn (Meta $meta) => $meta::method())
                 ->all()
             )
             ->flatten()
