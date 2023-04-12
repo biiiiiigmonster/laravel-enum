@@ -12,33 +12,24 @@ class ClassVisitor extends NodeVisitorAbstract
 {
     /**
      * Class namespace
-     * @var string
      */
     private string $namespace = '';
 
     /**
      * Class name
-     * @var string
      */
     private string $className = '';
 
     /**
      * Class is interface.
-     * @var bool
      */
     private bool $interface = false;
 
-    /**
-     * @return string
-     */
     public function getClass(): string
     {
         return sprintf('%s\\%s', $this->namespace, $this->className);
     }
 
-    /**
-     * @return bool
-     */
     public function isInterface(): bool
     {
         return $this->interface;
@@ -46,9 +37,6 @@ class ClassVisitor extends NodeVisitorAbstract
 
     /**
      * Enter node
-     *
-     * @param Node $node
-     * @return Node
      */
     public function enterNode(Node $node): Node
     {
@@ -59,21 +47,18 @@ class ClassVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof Node\Stmt\Interface_) {
             $this->interface = true;
         }
+
         return $node;
     }
 
-    /**
-     * @param Node $node
-     * @return Node
-     */
     public function leaveNode(Node $node): Node
     {
         if (
             $node instanceof Node\Stmt\Trait_
-            || ($node instanceof Class_ && !$node->isAnonymous())
+            || ($node instanceof Class_ && ! $node->isAnonymous())
         ) {
             array_unshift($node->stmts, new TraitUse([
-                new Node\Name('\\' . MethodTrait::class)
+                new Node\Name('\\'.MethodTrait::class),
             ]));
         }
 

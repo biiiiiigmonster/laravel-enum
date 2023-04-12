@@ -34,7 +34,7 @@ class EnumAnnotateCommand extends Command
         if ($classNames = $this->argument('class')) {
             foreach ($classNames as $className) {
                 $reflection = new ReflectionClass($className);
-                if (!$reflection->isSubclassOf(UnitEnum::class)) {
+                if (! $reflection->isSubclassOf(UnitEnum::class)) {
                     throw new InvalidArgumentException(
                         sprintf('The given class must be an instance of %s: %s', UnitEnum::class, $className)
                     );
@@ -42,7 +42,7 @@ class EnumAnnotateCommand extends Command
 
                 if (
                     collect($reflection->getTraits())
-                        ->doesntContain(fn(ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))
+                        ->doesntContain(fn (ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))
                 ) {
                     throw new InvalidArgumentException(
                         sprintf('The given class must be use trait of %s: %s', EnumTraits::class, $className)
@@ -50,6 +50,7 @@ class EnumAnnotateCommand extends Command
                 }
                 $this->annotate($reflection);
             }
+
             return;
         }
 
@@ -58,7 +59,7 @@ class EnumAnnotateCommand extends Command
             $reflection = new ReflectionClass($classVisitor->getClass());
             if ($reflection->isSubclassOf(UnitEnum::class)
                 && collect($reflection->getTraits())
-                    ->doesntContain(fn(ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))) {
+                    ->doesntContain(fn (ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))) {
                 $this->annotate($reflection);
             }
         }
@@ -76,11 +77,11 @@ class EnumAnnotateCommand extends Command
             : new DocBlockGenerator();
 
         $retainedTags = collect($docBlock->getTags())
-            ->reject(fn(TagInterface $tag) => $tag instanceof MethodTag)
+            ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag)
             ->all();
 
         $tags = collect($reflection->getName()::metaMethods())
-            ->map(fn(string $methodName) => new MethodTag($methodName))
+            ->map(fn (string $methodName) => new MethodTag($methodName))
             ->merge($retainedTags)
             ->all();
 
@@ -105,7 +106,7 @@ class EnumAnnotateCommand extends Command
         // Remove existing docblock
         $contents = preg_replace(
             sprintf('#([\n]?\/\*(?:[^*]|\n|(?:\*(?:[^\/]|\n)))*\*\/)?[\n]?%s#ms', preg_quote($classDeclaration)),
-            "\n" . $classDeclaration,
+            "\n".$classDeclaration,
             $contents
         );
 
@@ -113,7 +114,7 @@ class EnumAnnotateCommand extends Command
         // Make sure we don't replace too much
         $contents = substr_replace(
             $contents,
-            sprintf("%s%s", $docBlock->generate(), $classDeclaration),
+            sprintf('%s%s', $docBlock->generate(), $classDeclaration),
             $classDeclarationOffset,
             strlen($classDeclaration)
         );

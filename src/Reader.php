@@ -11,14 +11,17 @@ use SplFileInfo;
 class Reader
 {
     private SplFileInfo $file;
+
     private Parser $parser;
+
     private NodeTraverser $traverser;
+
     private array $visitors;
 
     /**
      * Proxy constructor.
-     * @param SplFileInfo $file
-     * @param array $visitors
+     *
+     * @param  array  $visitors
      */
     public function __construct(SplFileInfo $file, NodeVisitor ...$visitors)
     {
