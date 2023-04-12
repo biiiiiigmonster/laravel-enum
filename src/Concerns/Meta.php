@@ -25,6 +25,10 @@ abstract class Meta
     /** Get the name of the accessor method */
     public static function method(): string
     {
+        if (property_exists(static::class, 'method')) {
+            return static::${'method'};
+        }
+
         return str(static::class)->afterLast('\\')->lcfirst();
     }
 

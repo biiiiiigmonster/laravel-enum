@@ -20,6 +20,7 @@
         "laravel/framework": "^10.0"
     },
     "require-dev": {
+        "laminas/laminas-code": "^4.10",
         "laravel/pint": "^1.0",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.0",

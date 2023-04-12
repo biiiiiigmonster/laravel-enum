@@ -100,7 +100,26 @@ trait EnumTraits
         return collect(static::cases())
             ->first(fn (UnitEnum $case) => self::caseMetaAttributes($case)
                 ->filter(fn (Meta $attr) => $attr::class === $meta::class)
-                ->contains(fn (Meta $attr) => $attr->value === $meta->value)
+                ->filter(fn (Meta $attr) => $attr->value === $meta->value)
+                ->isNotEmpty()
+            );
+    }
+
+    public static function fromMetaMethod(mixed $value, string $method): static
+    {
+        return static::tryFromMetaMethod($value, $method) ?? throw new ValueError(
+            'Enum '.static::class.' does not have a case with a meta property "'.
+            $method.'" of value "'.$value.'"'
+        );
+    }
+
+    public static function tryFromMetaMethod(mixed $value, string $method): ?static
+    {
+        return collect(static::cases())
+            ->first(fn (UnitEnum $case) => self::caseMetaAttributes($case)
+                ->filter(fn (Meta $attr) => $attr::method() === $method)
+                ->filter(fn (Meta $attr) => $attr->value === $value)
+                ->isNotEmpty()
             );
     }
 
@@ -131,6 +150,18 @@ trait EnumTraits
         return collect($reflection->getAttributes())
             ->map(fn (ReflectionAttribute $refAttr) => $refAttr->newInstance())
             ->filter(fn ($attr) => $attr instanceof Meta);
+    }
+
+    public static function metaMethods(): array
+    {
+        return collect(static::cases())
+            ->map(fn (UnitEnum $case) => self::caseMetaAttributes($case)
+                ->map(fn(Meta $meta) => $meta::method())
+                ->all()
+            )
+            ->flatten()
+            ->duplicates()
+            ->all();
     }
 
     public static function random(): static
