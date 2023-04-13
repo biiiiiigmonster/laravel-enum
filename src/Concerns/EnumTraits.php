@@ -3,7 +3,8 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
-use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use ReflectionAttribute;
@@ -68,7 +69,7 @@ trait EnumTraits
             self::caseMetaAttributes($case)
                 ->filter(fn (Meta $attr) => empty($metas) || in_array($attr::class, $metas))
                 ->map(function (Meta $attr) use (&$table) {
-                    $table[$attr::method()] = self::localized($attr->value);
+                    $table[$attr::method()] = $attr->value;
                 });
 
             return $table;
@@ -131,16 +132,21 @@ trait EnumTraits
                 'Enum '.$this::class.' does not have a case with a meta property "'.$property.'"'
             );
 
-        return self::localized($meta);
+        return $meta->value;
     }
 
     private static function localized(Meta $meta): mixed
     {
-        if ($meta instanceof Localizable) {
-            return Lang::get($meta->value);
+        if ($meta instanceof Localized) {
+            return Lang::get($meta->getLocalizationKey($meta->value));
         }
 
         return $meta->value;
+    }
+
+    public function getLocalizationKey(mixed $value): string
+    {
+        return 'enums'.static::class.$value;
     }
 
     private static function caseMetaAttributes(UnitEnum $case): Collection
@@ -166,6 +172,6 @@ trait EnumTraits
 
     public static function random(): static
     {
-        return array_rand(static::cases());
+        return Arr::random(static::cases());
     }
 }
