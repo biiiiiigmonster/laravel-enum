@@ -34,7 +34,7 @@ class EnumMeta implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->passes($attribute, $value)) {
+        if (! $this->passes($attribute, $value)) {
             $fail('laravelEnum::validation.enum_meta')->translate();
         }
     }
