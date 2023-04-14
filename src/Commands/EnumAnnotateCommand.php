@@ -126,8 +126,8 @@ class EnumAnnotateCommand extends Command
     protected function getClassFinder(): Finder
     {
         $finder = new Finder();
-        $scanPaths = $this->option('folder') ?? [app_path('Enums')];
+        $scanPaths = $this->option('folder') ?? app_path('Enums');
 
-        return $finder->files()->in($scanPaths)->name('*.php');
+        return $finder->files()->in((array) $scanPaths)->name('*.php');
     }
 }

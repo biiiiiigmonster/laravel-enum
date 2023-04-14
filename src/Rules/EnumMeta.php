@@ -4,11 +4,12 @@ namespace BiiiiiigMonster\LaravelEnum\Rules;
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
 use UnitEnum;
 
-class EnumMeta implements Rule
+class EnumMeta implements ValidationRule
 {
     public function __construct(protected string $enum, protected ?string $meta = null)
     {
@@ -23,7 +24,7 @@ class EnumMeta implements Rule
         }
     }
 
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         return ! is_null($this->meta
                 ? $this->enum::tryFromMeta(new $this->meta($value))
@@ -31,8 +32,10 @@ class EnumMeta implements Rule
             );
     }
 
-    public function message()
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return __('laravelEnum::validation.enum_meta');
+        if (!$this->passes($attribute, $value)) {
+            $fail('laravelEnum::validation.enum_meta')->translate();
+        }
     }
 }

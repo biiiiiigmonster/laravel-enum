@@ -10,21 +10,21 @@ use Illuminate\Support\ServiceProvider;
 
 class EnumServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->bootCommands();
         $this->bootTranslations();
         $this->bootValidators();
     }
 
-    private function bootCommands()
+    private function bootCommands(): void
     {
         if ($this->app->runningInConsole() && $this->app->isLocal()) {
             $this->commands(EnumAnnotateCommand::class);
         }
     }
 
-    private function bootValidators()
+    private function bootValidators(): void
     {
         Validator::extend('enum_name', function ($attribute, $value, $parameters, $validator) {
             $enum = $parameters[0] ?? null;
@@ -41,7 +41,7 @@ class EnumServiceProvider extends ServiceProvider
         });
     }
 
-    private function bootTranslations()
+    private function bootTranslations(): void
     {
         $this->publishes([
             __DIR__.'/../lang' => $this->app->langPath('vendor/laravelEnum'),

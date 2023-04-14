@@ -3,11 +3,12 @@
 namespace BiiiiiigMonster\LaravelEnum\Rules;
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
 use UnitEnum;
 
-class EnumName implements Rule
+class EnumName implements ValidationRule
 {
     public function __construct(protected string $enum)
     {
@@ -19,13 +20,15 @@ class EnumName implements Rule
         }
     }
 
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         return ! is_null($this->enum::tryFromName($value));
     }
 
-    public function message()
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return __('laravelEnum::validation.enum_name');
+        if (!$this->passes($attribute, $value)) {
+            $fail('laravelEnum::validation.enum_name')->translate();
+        }
     }
 }

@@ -2,10 +2,12 @@
 
 namespace BiiiiiigMonster\LaravelEnum;
 
+use InvalidArgumentException;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use RuntimeException;
 use SplFileInfo;
 
 class Reader
@@ -19,9 +21,10 @@ class Reader
     private array $visitors;
 
     /**
-     * Proxy constructor.
+     * Reader constructor.
      *
-     * @param  array  $visitors
+     * @param SplFileInfo $file
+     * @param NodeVisitor ...$visitors
      */
     public function __construct(SplFileInfo $file, NodeVisitor ...$visitors)
     {
@@ -35,10 +38,13 @@ class Reader
 
     private function read(): void
     {
-        $ast = $this->parser->parse(
-            // original code.
-            file_get_contents($this->file->getPathname())
-        );
+        if (empty($contents = file_get_contents($this->file->getPathname()))) {
+            throw new InvalidArgumentException('file contents get fail.');
+        }
+
+        if (is_null($ast = $this->parser->parse($contents))) {
+            throw new RuntimeException('file contents parse error.');
+        }
 
         // add visitor.
         foreach ($this->visitors as $visitor) {
