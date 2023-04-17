@@ -24,7 +24,7 @@ class EnumMeta implements ValidationRule
         }
     }
 
-    public function passes($attribute, $value): bool
+    public function passes(string $attribute, mixed $value): bool
     {
         return ! is_null($this->meta
                 ? $this->enum::tryFromMeta(new $this->meta($value))
@@ -34,7 +34,7 @@ class EnumMeta implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->passes($attribute, $value)) {
+        if (! $this->passes($attribute, $value)) {
             $fail('laravelEnum::validation.enum_meta')->translate();
         }
     }

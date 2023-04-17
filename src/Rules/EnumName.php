@@ -20,14 +20,14 @@ class EnumName implements ValidationRule
         }
     }
 
-    public function passes($attribute, $value): bool
+    public function passes(string $attribute, mixed $value): bool
     {
         return ! is_null($this->enum::tryFromName($value));
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->passes($attribute, $value)) {
+        if (! $this->passes($attribute, $value)) {
             $fail('laravelEnum::validation.enum_name')->translate();
         }
     }

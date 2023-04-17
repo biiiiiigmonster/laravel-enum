@@ -12,6 +12,7 @@ use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Reflection\DocBlockReflection;
 use ReflectionClass;
+use ReflectionEnum;
 use ReflectionException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Finder\Finder;
@@ -31,10 +32,10 @@ class EnumAnnotateCommand extends Command
      */
     public function handle(): void
     {
-        if ($classNames = $this->argument('class')) {
+        if ($classNames = (array) $this->argument('class')) {
             foreach ($classNames as $className) {
-                $reflection = new ReflectionClass($className);
-                if (! $reflection->isSubclassOf(UnitEnum::class)) {
+                $reflection = new ReflectionEnum($className);
+                if (! $reflection->isEnum()) {
                     throw new InvalidArgumentException(
                         sprintf('The given class must be an instance of %s: %s', UnitEnum::class, $className)
                     );
@@ -56,29 +57,28 @@ class EnumAnnotateCommand extends Command
 
         foreach ($this->getClassFinder() as $file) {
             new Reader($file, $classVisitor = new ClassVisitor());
-            $reflection = new ReflectionClass($classVisitor->getClass());
-            if ($reflection->isSubclassOf(UnitEnum::class)
+            $reflection = new ReflectionEnum($classVisitor->getName());
+            if ($reflection->isEnum()
                 && collect($reflection->getTraits())
-                    ->doesntContain(fn (ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))) {
+                    ->doesntContain(fn (ReflectionEnum $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))) {
                 $this->annotate($reflection);
             }
         }
     }
 
-    protected function annotate(ReflectionClass $reflection)
+    protected function annotate(ReflectionEnum $reflection): void
     {
         $this->writeDocComment($reflection, $this->getDocBlock($reflection));
     }
 
-    protected function getDocBlock(ReflectionClass $reflection): DocBlockGenerator
+    protected function getDocBlock(ReflectionEnum $reflection): DocBlockGenerator
     {
         $docBlock = $reflection->getDocComment()
             ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection))
             : new DocBlockGenerator();
 
         $retainedTags = collect($docBlock->getTags())
-            ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag)
-            ->all();
+            ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag);
 
         $tags = collect($reflection->getName()::metaMethods())
             ->map(fn (string $methodName) => new MethodTag($methodName))
@@ -90,27 +90,21 @@ class EnumAnnotateCommand extends Command
         return $docBlock;
     }
 
-    protected function writeDocComment(ReflectionClass $reflection, DocBlockGenerator $docBlock): void
+    protected function writeDocComment(ReflectionEnum $reflection, DocBlockGenerator $docBlock): void
     {
-        $fileName = $reflection->getFileName();
+        $fileName = (string) $reflection->getFileName();
         $shortName = $reflection->getShortName();
-        $contents = file_get_contents($fileName);
-        $classDeclaration = "class $shortName";
-
-        if ($reflection->isFinal()) {
-            $classDeclaration = "final $classDeclaration";
-        } elseif ($reflection->isAbstract()) {
-            $classDeclaration = "abstract $classDeclaration";
-        }
+        $contents = (string) file_get_contents($fileName);
+        $classDeclaration = "enum $shortName";
 
         // Remove existing docblock
-        $contents = preg_replace(
+        $contents = (string) preg_replace(
             sprintf('#([\n]?\/\*(?:[^*]|\n|(?:\*(?:[^\/]|\n)))*\*\/)?[\n]?%s#ms', preg_quote($classDeclaration)),
             "\n".$classDeclaration,
             $contents
         );
 
-        $classDeclarationOffset = strpos($contents, $classDeclaration);
+        $classDeclarationOffset = (int) strpos($contents, $classDeclaration);
         // Make sure we don't replace too much
         $contents = substr_replace(
             $contents,

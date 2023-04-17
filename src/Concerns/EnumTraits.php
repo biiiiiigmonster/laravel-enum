@@ -158,6 +158,9 @@ trait EnumTraits
             ->filter(fn ($attr) => $attr instanceof Meta);
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function metaMethods(): array
     {
         return collect(static::cases())

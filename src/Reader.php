@@ -22,9 +22,6 @@ class Reader
 
     /**
      * Reader constructor.
-     *
-     * @param SplFileInfo $file
-     * @param NodeVisitor ...$visitors
      */
     public function __construct(SplFileInfo $file, NodeVisitor ...$visitors)
     {

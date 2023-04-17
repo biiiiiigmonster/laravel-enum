@@ -22,7 +22,7 @@ class ClassVisitor extends NodeVisitorAbstract
      */
     private bool $interface = false;
 
-    public function getClass(): string
+    public function getName(): string
     {
         return sprintf('%s\\%s', $this->namespace, $this->className);
     }

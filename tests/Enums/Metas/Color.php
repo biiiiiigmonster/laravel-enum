@@ -8,5 +8,4 @@ use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 #[Attribute]
 class Color extends Meta
 {
-
 }

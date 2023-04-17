@@ -22,7 +22,6 @@ abstract class Meta
         return $value;
     }
 
-    /** Get the name of the accessor method */
     public static function method(): string
     {
         if (property_exists(static::class, 'method')) {
