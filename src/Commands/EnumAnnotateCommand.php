@@ -26,6 +26,9 @@ class EnumAnnotateCommand extends Command
 
     protected $description = 'Generate DocBlock annotations of meta method for enum classes';
 
+    /**
+     * @throws ReflectionException
+     */
     public function handle(): void
     {
         if ($classNames = (array) $this->argument('class')) {
@@ -76,10 +79,8 @@ class EnumAnnotateCommand extends Command
         $retainedTags = collect($docBlock->getTags())
             ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag);
 
-        /** @phpstan-var class-string<EnumTraits> $className */
         // @phpstan-ignore-next-line
-        $className = $reflection->getName();
-        $tags = collect($className::metaMethods())
+        $tags = collect($reflection->getName()::metaMethods())
             ->map(fn (string $methodName) => new MethodTag($methodName))
             ->merge($retainedTags)
             ->all();
