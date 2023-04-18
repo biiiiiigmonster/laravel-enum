@@ -76,7 +76,10 @@ class EnumAnnotateCommand extends Command
         $retainedTags = collect($docBlock->getTags())
             ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag);
 
-        $tags = collect($reflection->getName()::metaMethods())
+        /** @phpstan-var class-string<EnumTraits> $className */
+        // @phpstan-ignore-next-line
+        $className = $reflection->getName();
+        $tags = collect($className::metaMethods())
             ->map(fn (string $methodName) => new MethodTag($methodName))
             ->merge($retainedTags)
             ->all();

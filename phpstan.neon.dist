@@ -2,13 +2,12 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 4
+    level: 8
     paths:
         - src
     tmpDir: build/phpstan
     ignoreErrors:
         - '#Access to an undefined static property static\(BiiiiiigMonster\\LaravelEnum\\Concerns\\Meta\)\:\:\$method#'
-        - '#Call to an undefined static method object\:\:metaMethods\(\)#'
     checkOctaneCompatibility: true
     checkModelProperties: true
     checkMissingIterableValueType: false
