@@ -70,7 +70,7 @@ class EnumAnnotateCommand extends Command
     protected function getDocBlock(ReflectionEnum $reflection): DocBlockGenerator
     {
         $docBlock = $reflection->getDocComment()
-            ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection->getDocComment()))
+            ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection))
             : new DocBlockGenerator();
 
         $retainedTags = collect($docBlock->getTags())
