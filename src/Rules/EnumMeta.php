@@ -7,16 +7,15 @@ use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
-use UnitEnum;
 
 class EnumMeta implements ValidationRule
 {
     public function __construct(protected string $enum, protected ?string $meta = null)
     {
-        if (! is_subclass_of($this->enum, UnitEnum::class)) {
+        if (! enum_exists($this->enum)) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
-        if (! in_array(EnumTraits::class, class_uses($this->enum))) {
+        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
         if ($this->meta && ! is_subclass_of($this->meta, Meta::class)) {

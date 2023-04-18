@@ -11,7 +11,6 @@ use Laminas\Code\Generator\DocBlock\Tag\MethodTag;
 use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Reflection\DocBlockReflection;
-use ReflectionClass;
 use ReflectionEnum;
 use ReflectionException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,29 +26,23 @@ class EnumAnnotateCommand extends Command
 
     protected $description = 'Generate DocBlock annotations of meta method for enum classes';
 
-    /**
-     * @throws ReflectionException
-     */
     public function handle(): void
     {
         if ($classNames = (array) $this->argument('class')) {
             foreach ($classNames as $className) {
-                $reflection = new ReflectionEnum($className);
-                if (! $reflection->isEnum()) {
+                /** @var class-string $className */
+                if (! enum_exists($className)) {
                     throw new InvalidArgumentException(
                         sprintf('The given class must be an instance of %s: %s', UnitEnum::class, $className)
                     );
                 }
 
-                if (
-                    collect($reflection->getTraits())
-                        ->doesntContain(fn (ReflectionClass $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))
-                ) {
+                if (! in_array(EnumTraits::class, class_uses_recursive($className))) {
                     throw new InvalidArgumentException(
                         sprintf('The given class must be use trait of %s: %s', EnumTraits::class, $className)
                     );
                 }
-                $this->annotate($reflection);
+                $this->annotate($className);
             }
 
             return;
@@ -57,24 +50,27 @@ class EnumAnnotateCommand extends Command
 
         foreach ($this->getClassFinder() as $file) {
             new Reader($file, $classVisitor = new ClassVisitor());
-            $reflection = new ReflectionEnum($classVisitor->getName());
-            if ($reflection->isEnum()
-                && collect($reflection->getTraits())
-                    ->doesntContain(fn (ReflectionEnum $refTrait) => $refTrait->isSubclassOf(EnumTraits::class))) {
-                $this->annotate($reflection);
+            $className = $classVisitor->getName();
+            if (enum_exists($className) && in_array(EnumTraits::class, class_uses_recursive($className))) {
+                $this->annotate($className);
             }
         }
     }
 
-    protected function annotate(ReflectionEnum $reflection): void
+    /**
+     * @throws ReflectionException
+     */
+    protected function annotate(string $className): void
     {
+        $reflection = new ReflectionEnum($className);
+
         $this->writeDocComment($reflection, $this->getDocBlock($reflection));
     }
 
     protected function getDocBlock(ReflectionEnum $reflection): DocBlockGenerator
     {
         $docBlock = $reflection->getDocComment()
-            ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection))
+            ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection->getDocComment()))
             : new DocBlockGenerator();
 
         $retainedTags = collect($docBlock->getTags())

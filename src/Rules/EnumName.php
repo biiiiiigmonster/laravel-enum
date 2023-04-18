@@ -6,16 +6,15 @@ use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
-use UnitEnum;
 
 class EnumName implements ValidationRule
 {
     public function __construct(protected string $enum)
     {
-        if (! is_subclass_of($this->enum, UnitEnum::class)) {
+        if (! enum_exists($this->enum)) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
-        if (! in_array(EnumTraits::class, class_uses($this->enum))) {
+        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
             throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
         }
     }

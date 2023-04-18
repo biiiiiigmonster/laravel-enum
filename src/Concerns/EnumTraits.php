@@ -4,6 +4,7 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
+use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
@@ -26,7 +27,7 @@ trait EnumTraits
     {
         $case = collect(static::cases())
             ->first(fn (UnitEnum $case) => $case->name === $name)
-            ?? throw new ValueError('"'.$name.'" is not a valid name for enum "'.static::class.'"');
+            ?? throw new UndefinedCaseError(static::class, $name);
 
         return self::call($case);
     }
@@ -126,13 +127,9 @@ trait EnumTraits
 
     public function __call(string $property, $arguments): mixed
     {
-        $meta = self::caseMetaAttributes($this)
+        return self::caseMetaAttributes($this)
             ->first(fn (Meta $attr) => $attr::method() === $property)
-            ?? throw new ValueError(
-                'Enum '.$this::class.' does not have a case with a meta property "'.$property.'"'
-            );
-
-        return $meta->value;
+            ?->value;
     }
 
     private static function localized(Meta $meta): mixed
