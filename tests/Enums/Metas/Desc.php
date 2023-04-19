@@ -8,8 +8,5 @@ use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 #[Attribute]
 class Desc extends Meta
 {
-    public static function method(): string
-    {
-        return 'description';
-    }
+    public static string $alias = 'description';
 }

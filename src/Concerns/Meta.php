@@ -4,6 +4,7 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 abstract class Meta
 {
+    const ALIAS = null;
     final public function __construct(
         public mixed $value,
     ) {
@@ -22,10 +23,10 @@ abstract class Meta
         return $value;
     }
 
-    public static function method(): string
+    final public static function method(): string
     {
-        if (property_exists(static::class, 'method')) {
-            return static::${'method'};
+        if (property_exists(static::class, 'alias')) {
+            return static::${'alias'};
         }
 
         return str(static::class)->afterLast('\\')->lcfirst();

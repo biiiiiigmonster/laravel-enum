@@ -8,7 +8,7 @@ use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 #[Attribute]
 class Instructions extends Meta
 {
-    public static string $method = 'help';
+    public static string $alias = 'help';
 
     protected function transform(mixed $value): mixed
     {
