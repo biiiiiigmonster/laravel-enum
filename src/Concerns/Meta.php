@@ -5,6 +5,7 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 abstract class Meta
 {
     const ALIAS = null;
+
     final public function __construct(
         public mixed $value,
     ) {
