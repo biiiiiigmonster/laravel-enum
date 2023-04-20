@@ -4,8 +4,10 @@ namespace BiiiiiigMonster\LaravelEnum\Commands;
 
 use BiiiiiigMonster\LaravelEnum\ClassVisitor;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 use BiiiiiigMonster\LaravelEnum\Reader;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Laminas\Code\Generator\DocBlock\Tag\MethodTag;
 use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
@@ -13,6 +15,10 @@ use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Reflection\DocBlockReflection;
 use ReflectionEnum;
 use ReflectionException;
+use ReflectionIntersectionType;
+use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionUnionType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Finder\Finder;
 use UnitEnum;
@@ -21,7 +27,7 @@ use UnitEnum;
 class EnumAnnotateCommand extends Command
 {
     protected $signature = 'enum:annotate
-                            {class?* : The enum class to generate annotations for}
+                            {enum?* : The enum class to generate annotations for}
                             {--folder=* : The folder to scan for enums to annotate}';
 
     protected $description = 'Generate DocBlock annotations of meta method for enum classes';
@@ -31,7 +37,7 @@ class EnumAnnotateCommand extends Command
      */
     public function handle(): void
     {
-        if ($classNames = (array) $this->argument('class')) {
+        if ($classNames = (array) $this->argument('enum')) {
             foreach ($classNames as $className) {
                 /** @var class-string $className */
                 if (! enum_exists($className)) {
@@ -80,14 +86,26 @@ class EnumAnnotateCommand extends Command
             ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag);
 
         // @phpstan-ignore-next-line
-        $tags = collect($reflection->getName()::metaMethods())
-            ->map(fn (string $methodName) => new MethodTag($methodName))
+        $tags = collect($reflection->getName()::metas())
+            ->duplicates(fn (Meta $meta) => $meta::class)
+            ->map(function (string $meta) {
+                $rfm = new ReflectionMethod($meta, 'transform');
+                $types = [];
+                $rft = $rfm->getReturnType();
+                if ($rft instanceof ReflectionNamedType) {
+                    $types[] = $rft->getName();
+                } elseif ($rft instanceof ReflectionUnionType) {
+                    $types = Arr::map($rft->getTypes(), fn (ReflectionNamedType $type) => $type->getName());
+                } elseif ($rft instanceof ReflectionIntersectionType) {
+                    $types[] = collect($rft->getTypes())->map(fn (ReflectionNamedType $type) => $type->getName())->implode('&');
+                }
+
+                return new MethodTag($meta::method(), $types);
+            })
             ->merge($retainedTags)
             ->all();
 
-        $docBlock->setTags($tags);
-
-        return $docBlock;
+        return new DocBlockGenerator($docBlock->getShortDescription(), $docBlock->getLongDescription(), $tags);
     }
 
     protected function writeDocComment(ReflectionEnum $reflection, DocBlockGenerator $docBlock): void

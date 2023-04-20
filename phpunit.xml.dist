@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="BiiiiiigMonster\\LaravelEnum Test Suite">
+        <testsuite name="LaravelEnum Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

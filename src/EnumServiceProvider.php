@@ -19,7 +19,7 @@ class EnumServiceProvider extends ServiceProvider
 
     private function bootCommands(): void
     {
-        if ($this->app->runningInConsole() && $this->app->isLocal()) {
+        if ($this->app->runningInConsole() && ($this->app->isLocal()||$this->app->runningUnitTests())) {
             $this->commands(EnumAnnotateCommand::class);
         }
     }
@@ -27,17 +27,11 @@ class EnumServiceProvider extends ServiceProvider
     private function bootValidators(): void
     {
         Validator::extend('enum_name', function ($attribute, $value, $parameters, $validator) {
-            $enum = $parameters[0] ?? null;
-
-            return (new EnumName($enum))->passes($attribute, $value);
+            return (new EnumName(...$parameters))->passes($attribute, $value);
         });
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
-            $enum = $parameters[0] ?? null;
-
-            $meta = $parameters[1] ?? null;
-
-            return (new EnumMeta($enum, $meta))->passes($attribute, $value);
+            return (new EnumMeta(...$parameters))->passes($attribute, $value);
         });
     }
 

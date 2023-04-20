@@ -7,7 +7,7 @@ parameters:
         - src
     tmpDir: build/phpstan
     ignoreErrors:
-        - '#Access to an undefined static property static\(BiiiiiigMonster\\LaravelEnum\\Concerns\\Meta\)\:\:\$method#'
+        - '#Access to an undefined static property static\(BiiiiiigMonster\\LaravelEnum\\Concerns\\Meta\)\:\:\$alias#'
     checkOctaneCompatibility: true
     checkModelProperties: true
     checkMissingIterableValueType: false

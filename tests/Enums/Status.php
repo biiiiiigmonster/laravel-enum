@@ -8,6 +8,8 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
 
 /**
+ * @method static int PENDING()
+ * @method static int DONE()
  * @method string color()
  * @method string description()
  * @method string help()

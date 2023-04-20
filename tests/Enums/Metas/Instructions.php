@@ -10,7 +10,7 @@ class Instructions extends Meta
 {
     public static string $alias = 'help';
 
-    protected function transform(mixed $value): mixed
+    protected function transform(mixed $value): string
     {
         return 'Help: '.$value;
     }

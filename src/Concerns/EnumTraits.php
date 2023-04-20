@@ -60,7 +60,7 @@ trait EnumTraits
         return array_column(static::cases(), 'value', 'name');
     }
 
-    public static function tables(...$metas): array
+    public static function tables(Meta ...$metas): array
     {
         return collect(static::cases())->map(function (UnitEnum $case) use ($metas) {
             $table = ['name' => $case->name];
@@ -158,15 +158,13 @@ trait EnumTraits
     /**
      * @return array<int, string>
      */
-    public static function metaMethods(): array
+    public static function metas(): array
     {
         return collect(static::cases())
             ->map(fn (UnitEnum $case) => self::caseMetaAttributes($case)
-                ->map(fn (Meta $meta) => $meta::method())
                 ->all()
             )
             ->flatten()
-            ->duplicates()
             ->all();
     }
 

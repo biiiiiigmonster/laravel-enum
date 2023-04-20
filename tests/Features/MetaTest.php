@@ -6,7 +6,7 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
-test('pure enums can have metadata on cases', function () {
+test('pure enums can have meta on cases', function () {
     expect(Role::ADMIN->color())->toBe('indigo')
         ->and(Role::GUEST->color())->toBe('gray')
         ->and(Role::ADMIN->description())->toBe('Administrator')
@@ -16,7 +16,7 @@ test('pure enums can have metadata on cases', function () {
 
 });
 
-test('backed enums can have metadata on cases', function () {
+test('backed enums can have meta on cases', function () {
     expect(Status::DONE->color())->toBe('green')
         ->and(Status::PENDING->color())->toBe('orange')
         ->and(Status::PENDING->description())->toBe('Incomplete task')
@@ -47,15 +47,14 @@ test('meta properties can customize the method name using a property', function 
         ->and(Role::ADMIN->help())->not()->toBeNull();
 });
 
-test('enums can be instantiated from metadata', function () {
+test('enums can be instantiated from meta', function () {
     expect(Role::fromMeta(Color::make('indigo')))->toBe(Role::ADMIN)
         ->and(Role::fromMeta(Color::make('gray')))->toBe(Role::GUEST)
         ->and(Status::fromMeta(Desc::make('Incomplete task')))->toBe(Status::PENDING)
         ->and(Status::fromMeta(Desc::make('Completed task')))->toBe(Status::DONE);
-
 });
 
-test('enums can be instantiated from metadata using tryFromMeta')
+test('enums can be instantiated from meta using tryFromMeta')
     ->expect(Role::tryFromMeta(Color::make('indigo')))
     ->toBe(Role::ADMIN);
 
@@ -65,4 +64,23 @@ test('fromMeta throws an exception when the enum cannot be instantiated', functi
 
 test('tryFromMeta silently fails when the enum cannot be instantiated')
     ->expect(Role::tryFromMeta(Color::make('foobar')))
+    ->toBeNull();
+
+test('enums can be instantiated from meta value with method', function () {
+    expect(Role::fromMetaMethod('indigo', 'color'))->toBe(Role::ADMIN)
+        ->and(Role::fromMetaMethod('gray', 'color'))->toBe(Role::GUEST)
+        ->and(Status::fromMetaMethod('Incomplete task', 'description'))->toBe(Status::PENDING)
+        ->and(Status::fromMetaMethod('Completed task', 'description'))->toBe(Status::DONE);
+});
+
+test('enums can be instantiated from meta value with method using tryFromMeta')
+    ->expect(Role::tryFromMetaMethod('indigo', 'color'))
+    ->toBe(Role::ADMIN);
+
+test('fromMeta throws an exception when the enum cannot be instantiated with method', function () {
+    Role::fromMetaMethod('foobar', 'color');
+})->throws(ValueError::class);
+
+test('tryFromMeta silently fails when the enum cannot be instantiated with method')
+    ->expect(Role::tryFromMetaMethod('foobar', 'color'))
     ->toBeNull();

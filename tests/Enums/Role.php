@@ -8,6 +8,8 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
 
 /**
+ * @method static string ADMIN()
+ * @method static string GUEST()
  * @method string color()
  * @method string description()
  * @method string help()
