@@ -14,6 +14,7 @@ use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Reflection\DocBlockReflection;
 use ReflectionEnum;
+use ReflectionEnumUnitCase;
 use ReflectionException;
 use ReflectionIntersectionType;
 use ReflectionMethod;
@@ -83,29 +84,41 @@ class EnumAnnotateCommand extends Command
             : new DocBlockGenerator();
 
         $retainedTags = collect($docBlock->getTags())
-            ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag);
-
-        // @phpstan-ignore-next-line
-        $tags = collect($reflection->getName()::metas())
-            ->duplicates(fn (Meta $meta) => $meta::class)
-            ->map(function (string $meta) {
-                $rfm = new ReflectionMethod($meta, 'transform');
-                $types = [];
-                $rft = $rfm->getReturnType();
-                if ($rft instanceof ReflectionNamedType) {
-                    $types[] = $rft->getName();
-                } elseif ($rft instanceof ReflectionUnionType) {
-                    $types = Arr::map($rft->getTypes(), fn (ReflectionNamedType $type) => $type->getName());
-                } elseif ($rft instanceof ReflectionIntersectionType) {
-                    $types[] = collect($rft->getTypes())->map(fn (ReflectionNamedType $type) => $type->getName())->implode('&');
-                }
-
-                return new MethodTag($meta::method(), $types);
-            })
-            ->merge($retainedTags)
+            ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag)
             ->all();
 
-        return new DocBlockGenerator($docBlock->getShortDescription(), $docBlock->getLongDescription(), $tags);
+        $caseTags = [];
+        $enumBackingType = $reflection->getBackingType()?->getName() ?? 'string';
+
+        $metaTags = collect($reflection->getCases())
+            ->flatMap(function (ReflectionEnumUnitCase $reflectionEnumUnitCase) use (&$caseTags, $enumBackingType) {
+                $case = $reflectionEnumUnitCase->getValue();
+                $caseTags[] = new MethodTag($case->name, [$enumBackingType], isStatic: true);
+
+                return array_map(function (Meta $meta) {
+                    $rfm = new ReflectionMethod($meta, 'transform');
+                    $types = [];
+                    $rft = $rfm->getReturnType();
+                    if ($rft instanceof ReflectionNamedType) {
+                        $types[] = $rft->getName();
+                    } elseif ($rft instanceof ReflectionUnionType) {
+                        $types = Arr::map($rft->getTypes(), fn (ReflectionNamedType $type) => $type->getName());
+                    } elseif ($rft instanceof ReflectionIntersectionType) {
+                        $types[] = collect($rft->getTypes())->map(fn (ReflectionNamedType $type) => $type->getName())->implode('&');
+                    }
+
+                    return [$meta::method() => $types];
+                }, $case->metas());
+            })
+            ->collapse()
+            ->map(fn (array $types, string $methodName) => new MethodTag($methodName, $types)) // @phpstan-ignore-line
+            ->all();
+
+        return new DocBlockGenerator(
+            $docBlock->getShortDescription(),
+            $docBlock->getLongDescription(),
+            $retainedTags + $caseTags + $metaTags
+        );
     }
 
     protected function writeDocComment(ReflectionEnum $reflection, DocBlockGenerator $docBlock): void

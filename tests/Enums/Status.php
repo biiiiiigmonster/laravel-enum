@@ -10,8 +10,8 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
 /**
  * @method static int PENDING()
  * @method static int DONE()
- * @method string color()
- * @method string description()
+ * @method mixed color()
+ * @method mixed description()
  * @method string help()
  */
 enum Status: int

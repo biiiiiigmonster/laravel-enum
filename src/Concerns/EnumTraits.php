@@ -4,6 +4,7 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
+use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -67,7 +68,8 @@ trait EnumTraits
             if ($case instanceof BackedEnum) {
                 $table['value'] = $case->value;
             }
-            self::caseMetaAttributes($case)
+            /** @var static $case */
+            collect($case->metas())
                 ->filter(fn (Meta $attr) => empty($metas) || in_array($attr::class, $metas))
                 ->map(function (Meta $attr) use (&$table) {
                     $table[$attr::method()] = $attr->value;
@@ -89,45 +91,32 @@ trait EnumTraits
         return collect(static::cases())->first(fn (UnitEnum $case) => $case->name === $name);
     }
 
-    public static function fromMeta(Meta $meta): static
+    public static function fromMeta(mixed $value, ?string $method = null): static
     {
-        return static::tryFromMeta($meta) ?? throw new ValueError(
-            'Enum '.static::class.' does not have a case with a meta property "'.
-            $meta::class.'" of value "'.$meta->value.'"'
-        );
+        return static::tryFromMeta($value, $method)
+            ?? throw new MetaValueError(static::class, $value, $method);
     }
 
-    public static function tryFromMeta(Meta $meta): ?static
+    public static function tryFromMeta(mixed $value, ?string $method = null): ?static
     {
+        if ($value instanceof Meta) {
+            $method = $value::method();
+            $value = $value->value;
+        }
+
         return collect(static::cases())
-            ->first(fn (UnitEnum $case) => self::caseMetaAttributes($case)
-                ->filter(fn (Meta $attr) => $attr::class === $meta::class)
-                ->filter(fn (Meta $attr) => $attr->value === $meta->value)
-                ->isNotEmpty()
-            );
-    }
-
-    public static function fromMetaMethod(mixed $value, string $method): static
-    {
-        return static::tryFromMetaMethod($value, $method) ?? throw new ValueError(
-            'Enum '.static::class.' does not have a case with a meta property "'.
-            $method.'" of value "'.$value.'"'
-        );
-    }
-
-    public static function tryFromMetaMethod(mixed $value, string $method): ?static
-    {
-        return collect(static::cases())
-            ->first(fn (UnitEnum $case) => self::caseMetaAttributes($case)
-                ->filter(fn (Meta $attr) => $attr::method() === $method)
-                ->filter(fn (Meta $attr) => $attr->value === $value)
-                ->isNotEmpty()
+            ->first(fn (UnitEnum $case) =>
+                /** @var static $case */
+                collect($case->metas())
+                    ->filter(fn (Meta $attr) => $attr::method() === $method
+                        && $attr->value === $value)
+                    ->isNotEmpty()
             );
     }
 
     public function __call(string $property, $arguments): mixed
     {
-        return self::caseMetaAttributes($this)
+        return collect($this->metas())
             ->first(fn (Meta $attr) => $attr::method() === $property)
             ?->value;
     }
@@ -156,16 +145,21 @@ trait EnumTraits
     }
 
     /**
-     * @return array<int, string>
+     * @return Meta[]
      */
-    public static function metas(): array
+    public function metas(): array
     {
-        return collect(static::cases())
-            ->map(fn (UnitEnum $case) => self::caseMetaAttributes($case)
-                ->all()
-            )
-            ->flatten()
-            ->all();
+        /** @var UnitEnum $this */
+        $rfe = new ReflectionEnumUnitCase($this, $this->name);
+        $metas = [];
+        foreach ($rfe->getAttributes() as $attribute) {
+            $instance = $attribute->newInstance();
+            if ($instance instanceof Meta) {
+                $metas[] = $instance;
+            }
+        }
+
+        return $metas;
     }
 
     public static function random(): static

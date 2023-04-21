@@ -25,10 +25,12 @@ class EnumMeta implements ValidationRule
 
     public function passes(string $attribute, mixed $value): bool
     {
-        return ! is_null($this->meta
-                ? $this->enum::tryFromMeta(new $this->meta($value))
-                : $this->enum::tryFromMetaMethod($value, $attribute)
-            );
+        if ($this->meta) {
+            $value = new $this->meta($value);
+            $attribute = null;
+        }
+
+        return ! is_null($this->enum::tryFromMeta($value, $attribute));
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
