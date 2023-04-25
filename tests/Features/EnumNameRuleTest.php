@@ -10,7 +10,7 @@ $param = [
     'today' => 'MONDAY',
 ];
 
-test('can validate value by enum case name match', function () use ($param) {
+it('can validate value by enum case name match', function () use ($param) {
     $ruler = [
         'role' => ['required', new EnumName(Role::class)],
     ];
@@ -18,7 +18,7 @@ test('can validate value by enum case name match', function () use ($param) {
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
 });
 
-test('can validate value by enum case name match, using string pipe validation', function () use ($param) {
+it('can validate value by enum case name match, using string pipe validation', function () use ($param) {
     $ruler = [
         'role' => 'required|enum_name:'.Role::class,
     ];
@@ -26,7 +26,7 @@ test('can validate value by enum case name match, using string pipe validation',
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
 });
 
-test('validate value failed when the enum case name not match', function () use ($param) {
+it('validate value failed when the enum case name not match', function () use ($param) {
     $ruler = [
         'today' => ['required', new EnumName(Week::class)],
     ];

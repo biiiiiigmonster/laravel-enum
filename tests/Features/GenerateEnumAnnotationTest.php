@@ -6,7 +6,7 @@ use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
 use Laminas\Code\Generator\DocBlockGenerator;
 use Laminas\Code\Reflection\DocBlockReflection;
 
-test('can generate method docComment for enums', function () {
+it('can generate method docComment for enums', function () {
     $this->artisan('enum:annotate', ['enum' => Week::class]);
     $docBlock = DocBlockGenerator::fromReflection(new DocBlockReflection(new ReflectionEnum(Week::class)));
     $docMethods = collect($docBlock->getTags())

@@ -30,9 +30,4 @@ abstract class Meta
 
         return str(static::class)->afterLast('\\')->lcfirst();
     }
-
-    public static function getLocalizationKey(): string
-    {
-        return 'enums.'.static::class;
-    }
 }

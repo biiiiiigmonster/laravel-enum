@@ -3,13 +3,10 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
-use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Lang;
-use ReflectionAttribute;
 use ReflectionEnumUnitCase;
 use UnitEnum;
 use ValueError;
@@ -19,25 +16,6 @@ use ValueError;
  */
 trait EnumTraits
 {
-    public function __invoke(): int|string
-    {
-        return self::call($this);
-    }
-
-    public static function __callStatic($name, $args): int|string
-    {
-        $case = collect(static::cases())
-            ->first(fn (UnitEnum $case) => $case->name === $name)
-            ?? throw new UndefinedCaseError(static::class, $name);
-
-        return self::call($case);
-    }
-
-    private static function call(UnitEnum $case): int|string
-    {
-        return $case instanceof BackedEnum ? $case->value : $case->name;
-    }
-
     public static function names(): array
     {
         return array_column(static::cases(), 'name');
@@ -54,29 +32,36 @@ trait EnumTraits
 
     public static function options(): array
     {
-        if (! is_subclass_of(static::class, BackedEnum::class)) {
-            return static::names();
-        }
-
-        return array_column(static::cases(), 'value', 'name');
+        return array_combine(static::names(), static::values());
     }
 
-    public static function tables(Meta ...$metas): array
+    public static function tables(): array
     {
-        return collect(static::cases())->map(function (UnitEnum $case) use ($metas) {
-            $table = ['name' => $case->name];
-            if ($case instanceof BackedEnum) {
-                $table['value'] = $case->value;
-            }
-            /** @var static $case */
-            collect($case->metas())
-                ->filter(fn (Meta $attr) => empty($metas) || in_array($attr::class, $metas))
-                ->map(function (Meta $attr) use (&$table) {
-                    $table[$attr::method()] = $attr->value;
-                });
+        $allMetaMethods = collect(static::cases())
+            ->flatMap(fn (UnitEnum $case) => $case->metas())
+            ->map(fn (Meta $meta) => $meta::method())
+            ->unique()
+            ->all();
 
-            return $table;
-        })->all();
+        return collect(static::cases())
+            ->map(function (UnitEnum $case) use ($allMetaMethods) {
+                /** @var static $case */
+                $map = collect($case->metas())
+                    ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
+                    ->merge(['name' => $case->name])
+                    ->when($case instanceof BackedEnum,
+                        fn (Collection $collection) => $collection
+                            ->merge(['value' => $case->value])
+                    )
+                    ->all();
+
+                foreach ($allMetaMethods as $method) {
+                    $map[$method] = $map[$method] ?? null;
+                }
+
+                return $map;
+            })
+            ->all();
     }
 
     public static function fromName(string $name): static
@@ -88,7 +73,8 @@ trait EnumTraits
 
     public static function tryFromName(string $name): ?static
     {
-        return collect(static::cases())->first(fn (UnitEnum $case) => $case->name === $name);
+        return collect(static::cases())
+            ->first(fn (UnitEnum $case) => $case->name === $name);
     }
 
     public static function fromMeta(mixed $value, ?string $method = null): static
@@ -114,34 +100,9 @@ trait EnumTraits
             );
     }
 
-    public function __call(string $property, $arguments): mixed
+    public static function random(): static
     {
-        return collect($this->metas())
-            ->first(fn (Meta $attr) => $attr::method() === $property)
-            ?->value;
-    }
-
-    private static function localized(Meta $meta): mixed
-    {
-        if ($meta instanceof Localized) {
-            return Lang::get($meta->getLocalizationKey($meta->value));
-        }
-
-        return $meta->value;
-    }
-
-    public function getLocalizationKey(mixed $value): string
-    {
-        return 'enums'.static::class.$value;
-    }
-
-    private static function caseMetaAttributes(UnitEnum $case): Collection
-    {
-        $reflection = new ReflectionEnumUnitCase($case, $case->name);
-
-        return collect($reflection->getAttributes())
-            ->map(fn (ReflectionAttribute $refAttr) => $refAttr->newInstance())
-            ->filter(fn ($attr) => $attr instanceof Meta);
+        return Arr::random(static::cases());
     }
 
     /**
@@ -162,8 +123,24 @@ trait EnumTraits
         return $metas;
     }
 
-    public static function random(): static
+    public function __invoke(): int|string
     {
-        return Arr::random(static::cases());
+        return $this instanceof BackedEnum ? $this->value : $this->name;
+    }
+
+    public function __call(string $property, $arguments): mixed
+    {
+        return collect($this->metas())
+            ->first(fn (Meta $attr) => $attr::method() === $property)
+            ?->value;
+    }
+
+    public static function __callStatic($name, $args): int|string
+    {
+        $case = collect(static::cases())
+            ->first(fn (UnitEnum $case) => $case->name === $name)
+            ?? throw new UndefinedCaseError(static::class, $name);
+
+        return $case();
     }
 }
