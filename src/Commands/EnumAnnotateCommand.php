@@ -88,7 +88,11 @@ class EnumAnnotateCommand extends Command
             ->all();
 
         $caseTags = [];
-        $enumBackingType = $reflection->getBackingType()?->getName() ?? 'string';
+        $enumBackingType = 'string';
+        $rft = $reflection->getBackingType();
+        if ($rft instanceof ReflectionNamedType) {
+            $enumBackingType = $rft->getName();
+        }
 
         $metaTags = collect($reflection->getCases())
             ->flatMap(function (ReflectionEnumUnitCase $reflectionEnumUnitCase) use (&$caseTags, $enumBackingType) {
