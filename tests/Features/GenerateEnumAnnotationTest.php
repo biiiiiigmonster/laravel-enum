@@ -2,10 +2,6 @@
 
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Week;
 use Illuminate\Filesystem\Filesystem;
-use Laminas\Code\Generator\DocBlock\Tag\MethodTag;
-use Laminas\Code\Generator\DocBlock\Tag\TagInterface;
-use Laminas\Code\Generator\DocBlockGenerator;
-use Laminas\Code\Reflection\DocBlockReflection;
 
 it('can generate method docComment for enums', function () {
     $filePutContents = '';
