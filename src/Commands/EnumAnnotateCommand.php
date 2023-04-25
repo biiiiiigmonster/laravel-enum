@@ -7,6 +7,8 @@ use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 use BiiiiiigMonster\LaravelEnum\Reader;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Laminas\Code\Generator\DocBlock\Tag\MethodTag;
@@ -33,11 +35,15 @@ class EnumAnnotateCommand extends Command
 
     protected $description = 'Generate DocBlock annotations of meta method for enum classes';
 
+    protected Filesystem $filesystem;
+
     /**
-     * @throws ReflectionException
+     * @throws ReflectionException|FileNotFoundException
      */
-    public function handle(): void
+    public function handle(Filesystem $filesystem): void
     {
+        $this->filesystem = $filesystem;
+
         if ($classNames = (array) $this->argument('enum')) {
             foreach ($classNames as $className) {
                 /** @var class-string $className */
@@ -68,7 +74,7 @@ class EnumAnnotateCommand extends Command
     }
 
     /**
-     * @throws ReflectionException
+     * @throws ReflectionException|FileNotFoundException
      */
     protected function annotate(string $className): void
     {
@@ -116,21 +122,25 @@ class EnumAnnotateCommand extends Command
             })
             ->collapse()
             ->map(fn (array $types, string $methodName) => new MethodTag($methodName, $types)) // @phpstan-ignore-line
+            ->values()
             ->all();
 
         return new DocBlockGenerator(
             $docBlock->getShortDescription(),
             $docBlock->getLongDescription(),
-            $retainedTags + $caseTags + $metaTags
+            array_merge($retainedTags, $caseTags, $metaTags)
         );
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     protected function writeDocComment(ReflectionEnum $reflection, DocBlockGenerator $docBlock): void
     {
         $fileName = (string) $reflection->getFileName();
         $shortName = $reflection->getShortName();
-        $contents = (string) file_get_contents($fileName);
         $classDeclaration = "enum $shortName";
+        $contents = $this->filesystem->get($fileName);
 
         // Remove existing docblock
         $contents = (string) preg_replace(
@@ -148,15 +158,14 @@ class EnumAnnotateCommand extends Command
             strlen($classDeclaration)
         );
 
-        file_put_contents($fileName, $contents);
+        $this->filesystem->put($fileName, $contents);
         $this->info("Wrote new phpDocBlock to {$fileName}.");
     }
 
     protected function getClassFinder(): Finder
     {
-        $finder = new Finder();
         $scanPaths = $this->option('folder') ?? app_path('Enums');
 
-        return $finder->files()->in((array) $scanPaths)->name('*.php');
+        return Finder::create()->files()->in((array) $scanPaths)->name('*.php');
     }
 }
