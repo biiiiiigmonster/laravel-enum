@@ -4,6 +4,7 @@ namespace BiiiiiigMonster\LaravelEnum\Rules;
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
+use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
@@ -36,7 +37,7 @@ class EnumMeta implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail('laravelEnum::validation.enum_meta')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enum_meta')->translate();
         }
     }
 }

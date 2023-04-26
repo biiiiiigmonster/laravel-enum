@@ -12,7 +12,7 @@ $param = [
     'desc' => 'Administrator',
 ];
 
-it('can validate value by enum case meta properties matches', function () use ($param) {
+it('can validate value by the enum case meta properties matches', function () use ($param) {
     $ruler = [
         'color' => ['required', new EnumMeta(Role::class, Color::class)],
         'desc' => ['required', new EnumMeta(Role::class, Desc::class)],
@@ -21,7 +21,7 @@ it('can validate value by enum case meta properties matches', function () use ($
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
 });
 
-it('can validate value by enum case meta properties matches, using string pipe validation', function () use ($param) {
+it('can validate value by the enum case meta properties matches, using string pipe validation', function () use ($param) {
     $ruler = [
         'color' => 'required|enum_meta:'.Role::class.','.Color::class,
     ];
@@ -29,7 +29,7 @@ it('can validate value by enum case meta properties matches, using string pipe v
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
 });
 
-it('can validate value by enum case meta properties matches without meta class', function () use ($param) {
+it('can validate value by the enum case meta properties matches without meta class', function () use ($param) {
     $ruler = [
         'color' => ['required', new EnumMeta(Role::class)],
     ];
@@ -37,7 +37,7 @@ it('can validate value by enum case meta properties matches without meta class',
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
 });
 
-it('can validate value by enum case meta properties matches without meta class, using string pipe validation', function () use ($param) {
+it('can validate value by the enum case meta properties matches without meta class, using string pipe validation', function () use ($param) {
     $ruler = [
         'color' => 'required|enum_meta:'.Role::class,
     ];

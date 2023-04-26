@@ -3,6 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Rules;
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
@@ -27,7 +28,7 @@ class EnumName implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail('laravelEnum::validation.enum_name')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enum_name')->translate();
         }
     }
 }
