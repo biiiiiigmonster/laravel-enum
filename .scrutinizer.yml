@@ -1,13 +1,42 @@
 filter:
   excluded_paths:
-    - tests/*
+    - "tests/"
+    - "public/"
+    - "resources/js/vendor/"
+    - "database/"
 
+  dependency_paths:
+    - "vendor/"
+
+checks:
+  php:
+    remove_extra_empty_lines: true
+    remove_php_closing_tag: true
+    remove_trailing_whitespace: true
+    fix_use_statements:
+      remove_unused: true
+      preserve_multiple: false
+      preserve_blanklines: true
+      order_alphabetically: true
+    fix_linefeed: true
+    fix_line_ending: true
+    fix_identation_4spaces: true
 
 build:
+  image: default-bionic
   environment:
-    PKG_CONFIG_PATH: /usr/local/opt/openssl/lib/pkgconfig
-    OPENSSL_CFLAGS: -I/usr/local/opt/openssl/include
-    OPENSSL_LIBS: -L/usr/local/opt/openssl/lib -lssl -lcrypto
-  tests:
-    override:
-      - vendor/bin/phpunit
+    php:
+      version: 8.1.2
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+          - js-scrutinizer-run
+    coverage:
+      tests:
+        override:
+          - command: './vendor/bin/phpunit'
+            coverage:
+              file: build/logs/clover.xml   # <- Set this to where we find the coverage data.
+              format: clover
