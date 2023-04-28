@@ -1,0 +1,13 @@
+filter:
+  excluded_paths:
+    - tests/*
+
+
+build:
+  environment:
+    PKG_CONFIG_PATH: /usr/local/opt/openssl/lib/pkgconfig
+    OPENSSL_CFLAGS: -I/usr/local/opt/openssl/include
+    OPENSSL_LIBS: -L/usr/local/opt/openssl/lib -lssl -lcrypto
+  tests:
+    override:
+      - vendor/bin/phpunit
