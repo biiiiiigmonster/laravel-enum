@@ -3,10 +3,12 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use ReflectionEnumUnitCase;
 use UnitEnum;
 use ValueError;
@@ -32,7 +34,12 @@ trait EnumTraits
 
     public static function options(): array
     {
-        return array_combine(static::names(), static::values());
+        return collect(static::cases())
+            ->flatMap(fn (UnitEnum $case) =>
+                /** @var static $case */
+                [$case() => $case->label()]
+            )
+            ->all();
     }
 
     public static function tables(): array
@@ -62,6 +69,16 @@ trait EnumTraits
                 return $map;
             })
             ->all();
+    }
+
+    public static function from(mixed $name): static
+    {
+        return static::fromName((string) $name);
+    }
+
+    public static function tryFrom(mixed $name): ?static
+    {
+        return static::tryFromName((string) $name);
     }
 
     public static function fromName(string $name): static
@@ -121,6 +138,18 @@ trait EnumTraits
         }
 
         return $metas;
+    }
+
+    public function getLocalizationKey(): string
+    {
+        return 'enums.'.$this::class.'.'.$this();
+    }
+
+    public function label(): string
+    {
+        return $this instanceof Localized
+            ? trans($this->getLocalizationKey())
+            : Str::of($this->name)->lower()->studly();
     }
 
     public function __invoke(): int|string

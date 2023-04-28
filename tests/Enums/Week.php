@@ -3,10 +3,11 @@
 namespace BiiiiiigMonster\LaravelEnum\Tests\Enums;
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
 
-enum Week: int
+enum Week: int implements Localized
 {
     use EnumTraits;
 
@@ -16,5 +17,5 @@ enum Week: int
 
     #[Desc('LastDay of week')]
     #[Instructions('Not work too')]
-    case SATURDAY = 1;
+    case SATURDAY = 6;
 }

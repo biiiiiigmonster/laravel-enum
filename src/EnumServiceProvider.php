@@ -3,8 +3,8 @@
 namespace BiiiiiigMonster\LaravelEnum;
 
 use BiiiiiigMonster\LaravelEnum\Commands\EnumAnnotateCommand;
+use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
-use BiiiiiigMonster\LaravelEnum\Rules\EnumName;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,16 +21,16 @@ class EnumServiceProvider extends ServiceProvider
 
     private function bootCommands(): void
     {
-        if ($this->app->runningInConsole() && ($this->app->isLocal() || $this->app->runningUnitTests())) {
+        if ($this->app->runningInConsole()) {
             $this->commands(EnumAnnotateCommand::class);
         }
     }
 
     private function bootValidators(): void
     {
-        Validator::extend('enum_name', function ($attribute, $value, $parameters, $validator) {
-            return (new EnumName(...$parameters))->passes($attribute, $value);
-        }, trans(self::LANG_NAMESPACE.'::validation.enum_name'));
+        Validator::extend('enumerate', function ($attribute, $value, $parameters, $validator) {
+            return (new Enumerate(...$parameters))->passes($attribute, $value);
+        }, trans(self::LANG_NAMESPACE.'::validation.enumerate'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);

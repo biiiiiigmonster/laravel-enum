@@ -6,6 +6,16 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
+it('can select a case by name with from() for pure enums', function () {
+    expect(Role::from('ADMIN'))
+        ->toBe(Role::ADMIN);
+});
+
+it('can select a case by name with from() for backed enums', function () {
+    expect(Status::from(0))
+        ->toBe(Status::PENDING);
+});
+
 it('can select a case by name with fromName() for pure enums')
     ->expect(Role::fromName('ADMIN'))
     ->toBe(Role::ADMIN);

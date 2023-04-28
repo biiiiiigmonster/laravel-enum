@@ -6,29 +6,34 @@ use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use InvalidArgumentException;
 
-class EnumName implements ValidationRule
+class Enumerate implements ValidationRule
 {
     public function __construct(protected string $enum)
     {
-        if (! enum_exists($this->enum)) {
-            throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
-        }
-        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
-            throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
-        }
     }
 
     public function passes(string $attribute, mixed $value): bool
     {
-        return ! is_null($this->enum::tryFromName($value));
+        if (! enum_exists($this->enum)) {
+            return false;
+        }
+
+        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
+            return false;
+        }
+
+        if ($value instanceof $this->enum) {
+            return true;
+        }
+
+        return ! is_null($this->enum::tryFrom($value));
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enum_name')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enumerate')->translate();
         }
     }
 }

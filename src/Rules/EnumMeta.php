@@ -7,25 +7,31 @@ use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use InvalidArgumentException;
 
 class EnumMeta implements ValidationRule
 {
     public function __construct(protected string $enum, protected ?string $meta = null)
     {
-        if (! enum_exists($this->enum)) {
-            throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
-        }
-        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
-            throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
-        }
-        if ($this->meta && ! is_subclass_of($this->meta, Meta::class)) {
-            throw new InvalidArgumentException("Cannot validate against the enum, the class {$this->enum} doesn't exist.");
-        }
     }
 
     public function passes(string $attribute, mixed $value): bool
     {
+        if (! enum_exists($this->enum)) {
+            return false;
+        }
+
+        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
+            return false;
+        }
+
+        if ($value instanceof $this->enum) {
+            return true;
+        }
+
+        if ($this->meta && ! is_subclass_of($this->meta, Meta::class)) {
+            return false;
+        }
+
         if ($this->meta) {
             $value = new $this->meta($value);
             $attribute = null;

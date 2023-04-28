@@ -1,17 +1,17 @@
 <?php
 
+use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
-use BiiiiiigMonster\LaravelEnum\Rules\EnumName;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Color;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Week;
 use Illuminate\Support\Facades\Validator;
 
 it('validate failed message when the enum case name not match', function () {
     $param = [
-        'today' => 'MONDAY',
+        'today' => 1,
     ];
     $ruler = [
-        'today' => ['required', new EnumName(Week::class)],
+        'today' => ['required', new Enumerate(Week::class)],
     ];
     $messages = Validator::make($param, $ruler)->messages()->messages();
 
@@ -23,10 +23,10 @@ it('validate failed message when the enum case name not match', function () {
 
 it('validate failed message when the enum case name match, using string pipe validation', function () {
     $param = [
-        'today' => 'MONDAY',
+        'today' => 1,
     ];
     $ruler = [
-        'today' => 'required|enum_name:'.Week::class,
+        'today' => 'required|enumerate:'.Week::class,
     ];
     $messages = Validator::make($param, $ruler)->messages()->messages();
 
