@@ -26,10 +26,6 @@ build:
   environment:
     php:
       version: 8.1.2
-  dependencies:
-    before:
-      - composer install
-      - mkdir -p build/logs
   nodes:
     analysis:
       tests:
@@ -38,7 +34,7 @@ build:
     coverage:
       tests:
         override:
-          - command: './vendor/bin/pest --coverage=clover.xml'
+          - command: './vendor/bin/pest --coverage-clover clover.xml'
             coverage:
               file: clover.xml   # <- Set this to where we find the coverage data.
               format: clover
