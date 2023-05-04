@@ -1,15 +1,14 @@
 filter:
   excluded_paths:
     - "tests/"
+    - "vendor/"
     - "public/"
     - "resources/js/vendor/"
     - "database/"
 
-  dependency_paths:
-    - "vendor/"
-
 checks:
   php:
+    code_rating: true
     remove_extra_empty_lines: true
     remove_php_closing_tag: true
     remove_trailing_whitespace: true
@@ -27,12 +26,15 @@ build:
   environment:
     php:
       version: 8.1.2
+  dependencies:
+    before:
+      - composer install
+      - mkdir -p build/logs
   nodes:
     analysis:
       tests:
         override:
           - php-scrutinizer-run
-          - js-scrutinizer-run
     coverage:
       tests:
         override:

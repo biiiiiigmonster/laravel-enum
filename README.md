@@ -24,30 +24,10 @@ You can install the package via composer:
 composer require biiiiiigmonster/laravel-enum
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-enum-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="laravel-enum-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-enum-views"
 ```
 
 ## Usage
@@ -67,17 +47,13 @@ composer test
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
 
-- [陆云峰](https://github.com/biiiiiigmonster)
+- [Yunfeng Lu](https://github.com/biiiiiigmonster)
 - [All Contributors](../../contributors)
 
 ## License
