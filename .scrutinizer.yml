@@ -27,14 +27,10 @@ build:
     php:
       version: 8.1.2
   nodes:
-    analysis:
-      tests:
-        override:
-          - php-scrutinizer-run
     coverage:
       tests:
         override:
-          - command: './vendor/bin/pest --coverage-clover clover.xml'
+          - command: './vendor/bin/pest --coverage'
             coverage:
-              file: clover.xml   # <- Set this to where we find the coverage data.
+              file: build/logs/clover.xml   # <- Set this to where we find the coverage data.
               format: clover
