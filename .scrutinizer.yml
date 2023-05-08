@@ -30,7 +30,4 @@ build:
     coverage:
       tests:
         override:
-          - command: './vendor/bin/pest --coverage'
-            coverage:
-              file: build/logs/clover.xml   # <- Set this to where we find the coverage data.
-              format: clover
+          - command: './vendor/bin/pest'

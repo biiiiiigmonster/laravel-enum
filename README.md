@@ -3,18 +3,11 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/biiiiiigmonster/laravel-enum.svg?style=flat-square)](https://packagist.org/packages/biiiiiigmonster/laravel-enum)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/biiiiiigmonster/laravel-enum/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/biiiiiigmonster/laravel-enum/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/biiiiiigmonster/laravel-enum/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/biiiiiigmonster/laravel-enum/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Coverage Status](https://coveralls.io/repos/github/biiiiiigmonster/laravel-enum/badge.svg?branch=main)](https://coveralls.io/github/biiiiiigmonster/laravel-enum?branch=main)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/biiiiiigmonster/laravel-enum.svg?label=Scrutinizer&style=flat-square)](https://scrutinizer-ci.com/g/biiiiiigmonster/laravel-enum/)
 [![Total Downloads](https://img.shields.io/packagist/dt/biiiiiigmonster/laravel-enum.svg?style=flat-square)](https://packagist.org/packages/biiiiiigmonster/laravel-enum)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-enum.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-enum)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Enum helper for laravel based on the enum feature of php 8.1.
 
 ## Installation
 
@@ -22,12 +15,6 @@ You can install the package via composer:
 
 ```bash
 composer require biiiiiigmonster/laravel-enum
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-enum-config"
 ```
 
 ## Usage
@@ -46,10 +33,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
 
