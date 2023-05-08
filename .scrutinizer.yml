@@ -26,8 +26,6 @@ build:
   environment:
     php:
       version: 8.1.2
-  nodes:
-    coverage:
-      tests:
-        override:
-          - command: './vendor/bin/pest'
+  tests:
+    override:
+      - command: './vendor/bin/pest'
