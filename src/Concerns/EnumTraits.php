@@ -73,12 +73,12 @@ trait EnumTraits
 
     public static function from($name): static
     {
-        return static::fromName($name);
+        return static::fromName((string) $name);
     }
 
     public static function tryFrom($name): ?static
     {
-        return static::tryFromName($name);
+        return static::tryFromName((string) $name);
     }
 
     public static function fromName(string $name): static
