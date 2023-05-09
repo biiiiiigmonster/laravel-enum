@@ -1,11 +1,3 @@
-filter:
-  excluded_paths:
-    - "tests/"
-    - "vendor/"
-    - "public/"
-    - "resources/js/vendor/"
-    - "database/"
-
 checks:
   php:
     code_rating: true
