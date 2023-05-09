@@ -71,14 +71,14 @@ trait EnumTraits
             ->all();
     }
 
-    public static function from(mixed $name): static
+    public static function from($name): static
     {
-        return static::fromName((string) $name);
+        return static::fromName($name);
     }
 
-    public static function tryFrom(mixed $name): ?static
+    public static function tryFrom($name): ?static
     {
-        return static::tryFromName((string) $name);
+        return static::tryFromName($name);
     }
 
     public static function fromName(string $name): static
