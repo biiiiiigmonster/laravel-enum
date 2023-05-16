@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "laravel/framework": "^10"
+        "laravel/framework": ">=10"
     },
     "require-dev": {
         "laminas/laminas-code": "^4.10",

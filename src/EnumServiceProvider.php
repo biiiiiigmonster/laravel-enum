@@ -30,11 +30,11 @@ class EnumServiceProvider extends ServiceProvider
     {
         Validator::extend('enumerate', function ($attribute, $value, $parameters, $validator) {
             return (new Enumerate(...$parameters))->passes($attribute, $value);
-        }, trans(self::LANG_NAMESPACE.'::validation.enumerate'));
+        }, trans(static::LANG_NAMESPACE.'::validation.enumerate'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
-        }, trans(self::LANG_NAMESPACE.'::validation.enum_meta'));
+        }, trans(static::LANG_NAMESPACE.'::validation.enum_meta'));
     }
 
     private function bootTranslations(): void
@@ -43,6 +43,6 @@ class EnumServiceProvider extends ServiceProvider
             __DIR__.'/../lang' => $this->app->langPath('vendor/laravelEnum'),
         ], 'translations');
 
-        $this->loadTranslationsFrom(__DIR__.'/../lang', self::LANG_NAMESPACE);
+        $this->loadTranslationsFrom(__DIR__.'/../lang', static::LANG_NAMESPACE);
     }
 }
