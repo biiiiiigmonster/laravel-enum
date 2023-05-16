@@ -125,7 +125,7 @@ trait EnumTraits
     /**
      * @return Meta[]
      */
-    public function metas(): array
+    protected function metas(): array
     {
         /** @var UnitEnum $this */
         $rfe = new ReflectionEnumUnitCase($this, $this->name);
