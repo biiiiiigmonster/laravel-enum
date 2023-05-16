@@ -172,7 +172,7 @@ This feature lets you add meta data to enum cases.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use App\Enums\Meta\{Description, Color};
+use App\Enums\Metas\{Description, Color};
 
 enum TaskStatus: int
 {
