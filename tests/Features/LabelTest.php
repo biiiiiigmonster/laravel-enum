@@ -9,7 +9,7 @@ it('can get string label by one case from the enum', function () {
         ->toBe('Admin');
 });
 
-it('can get local string label by one case from the enum implements Localized interface', function () {
+it('can get local string label by one case from the enum implements Localizable interface', function () {
     expect(Week::SUNDAY->label())
         ->toBeString()
         ->toBe(trans('enums.'.Week::class.'.0'))

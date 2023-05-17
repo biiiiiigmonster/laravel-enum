@@ -3,7 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
-use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
 use Illuminate\Support\Arr;
@@ -147,7 +147,7 @@ trait EnumTraits
 
     public function label(): string
     {
-        return $this instanceof Localized
+        return $this instanceof Localizable
             ? trans($this->getLocalizationKey())
             : Str::of($this->name)->lower()->studly();
     }
