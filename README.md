@@ -21,7 +21,7 @@ composer require biiiiiigmonster/laravel-enum
 
 ### Invokable
 
-This helper lets you get the value of a backed enum, or the name of a pure enum, by "invoking" it — either statically (`MyEnum::FOO()` instead of `MyEnum::FOO`), or as an instance (`$enum()`).
+This helper lets you get the primitive value of a backed enum, or the name of a pure enum, by "invoking" it — either statically (`MyEnum::FOO()` instead of `MyEnum::FOO`), or as an instance (`$enum()`).
 
 That way, you can use enums as array keys:
 ```php
@@ -172,7 +172,7 @@ This feature lets you add meta data to enum cases.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use App\Enums\Meta\{Description, Color};
+use App\Enums\Metas\{Description, Color};
 
 enum TaskStatus: int
 {
