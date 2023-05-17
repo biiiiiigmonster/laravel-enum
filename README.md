@@ -374,16 +374,33 @@ Now, you just need to make sure that your enum implements the `Localized` interf
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use BiiiiiigMonster\LaravelEnum\Contracts\Localized;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 
-enum TaskStatus: int implements Localized
+enum TaskStatus: int implements Localizable
 {
     // ...
 }
 ```
 
-The `label()` method will now look for the value in your localization files.
-> Tips: `options()` method returned array's value also be translated
+The `label()` method will now look for the value in your localization files:
+
+```php
+// en/enums.php
+TaskStatus::CANCELED->label();// 'Canceled'
+
+// es/enums.php
+TaskStatus::CANCELED->label();// 'Cancelación'
+```
+
+and `options()` static method returned array's value also be localized:
+
+```php
+// en/enums.php
+TaskStatus::options();// [0 => 'Incomplete', 1 => 'Completed', 2 => 'Canceled']
+
+// es/enums.php
+TaskStatus::options();// [0 => 'Incompleto', 1 => 'Completo', 2 => 'Cancelación']
+```
 
 ## Artisan Command
 
@@ -436,11 +453,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Credits
-
-- [Yunfeng Lu](https://github.com/biiiiiigmonster)
-- [All Contributors](../../contributors)
 
 ## License
 

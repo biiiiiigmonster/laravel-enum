@@ -2,7 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Contracts;
 
-interface Localized
+interface Localizable
 {
     public function getLocalizationKey(): string;
 }
