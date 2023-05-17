@@ -48,3 +48,10 @@ it('meta properties can customize the method name using a property', function ()
         ->and(Role::ADMIN->help())->not()->toBeNull();
 });
 
+it('enums can get meta properties on cases', function () {
+    $metas = collect(Role::ADMIN->metas());
+    expect($metas->map(fn (Meta $meta) => $meta::class)->all())
+        ->toBe([Color::class, Desc::class, Instructions::class])
+        ->and($metas->map(fn (Meta $meta) => $meta->value)->all())
+        ->toBe(['indigo', 'Administrator', 'Help: Administrators can manage the entire account']);
+});
