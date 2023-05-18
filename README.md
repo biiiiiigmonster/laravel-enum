@@ -38,9 +38,7 @@ public function updateStatus(int $status): void;
 $task->updateStatus(TaskStatus::COMPLETED());
 ```
 
-The main point: this is all without [having to append](https://twitter.com/archtechx/status/1495158237137494019) `->value` to everything.
-
-This approach also has *decent* IDE support. You get autosuggestions while typing, and then you just append `()`:
+The main point: this is all without having to append `->value` to everything:
 ```php
 MyEnum::FOO; // => MyEnum instance
 MyEnum::FOO(); // => 1
@@ -189,9 +187,9 @@ enum TaskStatus: int
 }
 ```
 
-#### Creating meta properties
+#### Creating meta attributes
 
-Each meta property (= attribute used on a case) needs to exist as a class.
+Each meta attribute needs to exist as a class.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
@@ -212,7 +210,7 @@ class Description extends Meta
 }
 ```
 
-With the code above, the description of a case will be accessible as `TaskStatus::INCOMPLETE->note()`.
+With the code above, the `->description()` of a case will be accessible as `->note()`.
 
 Another thing you can customize is the passed value. For instance, to wrap a color name like `text-{$color}-500`, you'd add the following `transform()` method:
 ```php
@@ -290,7 +288,7 @@ use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
 public function store(Request $request)
 {
     $this->validate($request, [
-        'statuses' => ['required', new Enumerate(TaskStatus::class)],
+        'status' => ['required', new Enumerate(TaskStatus::class)],
     ]);
 }
 ```
@@ -316,7 +314,7 @@ You can also use the 'pipe' syntax for rules.
 **enum_meta**_:enum_class,[meta_attribute]_
 
 ```php
-'statuses' => 'required|enumerate:' . TaskStatus::class,
+'status' => 'required|enumerate:' . TaskStatus::class,
 'color' => 'required|enum_meta:' . TaskStatus::class . ',' . Color::class,
 ```
 
@@ -412,7 +410,7 @@ By default, all Enums in `app/Enums` will be annotated (you can change the folde
 php artisan enum:annotate
 ```
 
-You can annotate a single class by specifying the class name
+Also, you can annotate a single class by specifying the class name
 
 ```bash
 php artisan enum:annotate "App\Enums\TaskStatus"
@@ -420,7 +418,7 @@ php artisan enum:annotate "App\Enums\TaskStatus"
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use App\Enums\Meta\{Description, Color};
+use App\Enums\Metas\{Description, Color};
 
 /**
  * @method static int INCOMPLETE()
