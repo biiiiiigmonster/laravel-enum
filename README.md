@@ -330,7 +330,7 @@ php artisan vendor:publish --provider="BiiiiiigMonster\LaravelEnum\EnumServicePr
 
 ### Enum labels
 
-You can translate the strings returned by the `label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
+You can translate the strings returned by the `->label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
 
 Add a new `enums.php` keys file for each of your supported languages. In this example there is one for English and one for Spanish.
 
@@ -380,7 +380,7 @@ enum TaskStatus: int implements Localizable
 }
 ```
 
-The `label()` method will now look for the value in your localization files:
+The `->label()` method will now look for the value in your localization files:
 
 ```php
 // en/enums.php
@@ -390,7 +390,7 @@ TaskStatus::CANCELED->label();// 'Canceled'
 TaskStatus::CANCELED->label();// 'Cancelación'
 ```
 
-and `options()` static method returned array's value also be localized:
+and the `options()` static method returned array's value also be localized:
 
 ```php
 // en/enums.php
