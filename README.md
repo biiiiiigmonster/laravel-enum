@@ -89,6 +89,8 @@ public function updateStatus(TaskStatus $status, Role $role)
 
 ### Enhancement
 
+Helper provide many static methods for you to enhance experience with enums.
+
 #### Names
 
 This helper returns a list of case *names* in the enum.
@@ -109,12 +111,16 @@ Role::values(); // ['ADMINISTRATOR', 'SUBSCRIBER', 'GUEST']
 
 #### Options
 
+This helper returns an array, that key is each instance invoke `()` return, and value is instance [`->label()`](#labels) returns.
+
 ```php
 TaskStatus::options(); // [0 => 'Incomplete', 1 => 'Completed', 2 => 'Canceled']
 Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscriber', 'GUEST' => 'Guest']
 ```
 
 #### Tables
+
+This helper returns a list of case map array that each instance, if instance append attributes that extended [`Meta`](#meta), the map array including more.
 
 ```php
 TaskStatus::tables(); // [['name' => 'INCOMPLETE', 'value' => 0], ['name' => 'COMPLETED', 'value' => 1], ['name' => 'CANCELED', 'value' => 2]]
@@ -159,6 +165,8 @@ Role::tryFromName('TESTER'); // null
 
 #### Random
 
+This helper returns an instance of case by random.
+
 ```php
 TaskStatus::random(); // TaskStatus::COMPLETED
 Role::random(); // Role::GUEST
@@ -202,6 +210,7 @@ class Description extends Meta {}
 ```
 
 Inside the class, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
+
 ```php
 #[Attribute]
 class Description extends Meta
@@ -231,10 +240,14 @@ TaskStatus::COMPLETED->color(); // 'text-green-500'
 
 #### Access the metadata
 
+By accessing the attribute method name, you can get the meta value:
+
 ```php
 TaskStatus::INCOMPLETE->description(); // 'Incomplete Task'
 TaskStatus::COMPLETED->color(); // 'green'
 ```
+
+Also, [`::tables()`](#tables) static method can return all meta attribute maps on each instance.
 
 ```php
 TaskStatus::tables(); 
@@ -328,7 +341,7 @@ Run the following command to publish the language files to your `lang` folder.
 php artisan vendor:publish --provider="BiiiiiigMonster\LaravelEnum\EnumServiceProvider" --tag="translations"
 ```
 
-### Enum labels
+### Labels
 
 You can translate the strings returned by the `->label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
 
@@ -390,7 +403,7 @@ TaskStatus::CANCELED->label();// 'Canceled'
 TaskStatus::CANCELED->label();// 'Cancelación'
 ```
 
-and the `options()` static method returned array's value also be localized:
+and the [`::options()`](#options) static method returned array's value also be localized:
 
 ```php
 // en/enums.php
