@@ -7,7 +7,7 @@
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/biiiiiigmonster/laravel-enum.svg?label=Scrutinizer&style=flat-square)](https://scrutinizer-ci.com/g/biiiiiigmonster/laravel-enum/)
 [![Total Downloads](https://img.shields.io/packagist/dt/biiiiiigmonster/laravel-enum.svg?style=flat-square)](https://packagist.org/packages/biiiiiigmonster/laravel-enum)
 
-Enum helper for laravel based on the enum feature of php 8.1.
+Enum helper for laravel10 based on the enum feature of php 8.1.
 
 ## Installation
 
@@ -252,39 +252,44 @@ Also, [`::tables()`](#tables) static method can return all meta attribute maps o
 ```php
 TaskStatus::tables(); 
 /*
-[
     [
-        'name' => 'INCOMPLETE', 
-        'value' => 0, 
-        'description' => 'Incomplete Task', 
-        'color' => 'red'
-    ], 
-    [
-        'name' => 'COMPLETED', 
-        'value' => 1, 
-        'description' => 'Completed Task', 
-        'color' => 'green'
-    ], 
-    [
-        'name' => 'CANCELED', 
-        'value' => 2, 
-        'description' => 'Canceled Task', 
-        'color' => 'gray'
+        [
+            'name' => 'INCOMPLETE', 
+            'value' => 0, 
+            'description' => 'Incomplete Task', 
+            'color' => 'red'
+        ], 
+        [
+            'name' => 'COMPLETED', 
+            'value' => 1, 
+            'description' => 'Completed Task', 
+            'color' => 'green'
+        ], 
+        [
+            'name' => 'CANCELED', 
+            'value' => 2, 
+            'description' => 'Canceled Task', 
+            'color' => 'gray'
+        ]
     ]
-]
 */
 ```
 
+Similarly, you can also get the enum case instance through the meta instance.
+
 #### Use the `fromMeta()` method
 ```php
-TaskStatus::fromMeta(Color::make('green')); // TaskStatus::COMPLETED
-TaskStatus::fromMeta(Color::make('blue')); // Error: ValueError
+$green = Color::make('green');// new Color('green');
+$blue = Color::make('blue');// new Color('blue');
+
+TaskStatus::fromMeta($green); // TaskStatus::COMPLETED
+TaskStatus::fromMeta($blue); // Error: ValueError
 ```
 
 #### Use the `tryFromMeta()` method
 ```php
-TaskStatus::tryFromMeta(Color::make('green')); // TaskStatus::COMPLETED
-TaskStatus::tryFromMeta(Color::make('blue')); // null
+TaskStatus::tryFromMeta($green); // TaskStatus::COMPLETED
+TaskStatus::tryFromMeta($blue); // null
 ```
 
 ## Validation
@@ -389,6 +394,7 @@ use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 
 enum TaskStatus: int implements Localizable
 {
+    use EnumTraits;
     // ...
 }
 ```
@@ -443,15 +449,7 @@ use App\Enums\Metas\{Description, Color};
 enum TaskStatus: int
 {
     use EnumTraits;
-
-    #[Description('Incomplete Task')] #[Color('red')]
-    case INCOMPLETE = 0;
-
-    #[Description('Completed Task')] #[Color('green')]
-    case COMPLETED = 1;
-
-    #[Description('Canceled Task')] #[Color('gray')]
-    case CANCELED = 2;
+    // ...
 }
 ```
 
