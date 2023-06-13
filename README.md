@@ -174,7 +174,7 @@ Role::random(); // Role::GUEST
 
 ### Meta
 
-This feature lets you add meta data to enum cases.
+This feature lets you add meta data to enum cases, it's used by way of attributes.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
@@ -294,11 +294,15 @@ TaskStatus::tryFromMeta($blue); // null
 
 ## Validation
 
+Usually, we need limit your application's incoming data to a specified enums, laravel provides the basic rule, but here we have perfected it.
+
 ### Array Validation
+
+You can use the 'array' syntax for rules.
 
 #### Enumerate
 
-Additionally, you can validate that a parameter is an instance of a given enum.
+Validate that a parameter is an instance of a given enum, it's similar to [`Enum Rules`](https://laravel.com/docs/10.x/validation#rule-enum) and can support pure enums.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
@@ -307,11 +311,14 @@ public function store(Request $request)
 {
     $this->validate($request, [
         'status' => ['required', new Enumerate(TaskStatus::class)],
+        'role' => ['required', new Enumerate(Role::class)],
     ]);
 }
 ```
 
 #### Enum meta
+
+Additionally, validate that a parameter is an instance of the given meta in the given enum.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
@@ -324,12 +331,18 @@ public function store(Request $request)
 }
 ```
 
+`EnumMeta` rule takes two parameters, the first is given enum, the second is given meta, if parameter name is same of meta method name, you can omit it:  
+
+```php
+['color' => ['required', new EnumMeta(TaskStatus::class)]]
+```
+
 ### Pipe Validation
 
 You can also use the 'pipe' syntax for rules.
 
-**enumerate**:_enum_class_
-**enum_meta**_:enum_class,[meta_attribute]_
+- **enumerate**: _enum_class_
+- **enum_meta**: _enum_class,[meta_attribute]_
 
 ```php
 'status' => 'required|enumerate:' . TaskStatus::class,
