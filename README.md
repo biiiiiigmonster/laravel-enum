@@ -7,7 +7,7 @@
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/biiiiiigmonster/laravel-enum.svg?label=Scrutinizer&style=flat-square)](https://scrutinizer-ci.com/g/biiiiiigmonster/laravel-enum/)
 [![Total Downloads](https://img.shields.io/packagist/dt/biiiiiigmonster/laravel-enum.svg?style=flat-square)](https://packagist.org/packages/biiiiiigmonster/laravel-enum)
 
-Enum helper for laravel based on the enum feature of php 8.1.
+Enum helper for laravel10 based on the enum feature of php 8.1.
 
 ## Installation
 
@@ -38,9 +38,7 @@ public function updateStatus(int $status): void;
 $task->updateStatus(TaskStatus::COMPLETED());
 ```
 
-The main point: this is all without [having to append](https://twitter.com/archtechx/status/1495158237137494019) `->value` to everything.
-
-This approach also has *decent* IDE support. You get autosuggestions while typing, and then you just append `()`:
+The main point: this is all without having to append `->value` to everything:
 ```php
 MyEnum::FOO; // => MyEnum instance
 MyEnum::FOO(); // => 1
@@ -91,6 +89,8 @@ public function updateStatus(TaskStatus $status, Role $role)
 
 ### Enhancement
 
+Helper provide many static methods for you to enhance experience with enums.
+
 #### Names
 
 This helper returns a list of case *names* in the enum.
@@ -111,12 +111,16 @@ Role::values(); // ['ADMINISTRATOR', 'SUBSCRIBER', 'GUEST']
 
 #### Options
 
+This helper returns an array, that key is each instance invoke `()` return, and value is instance [`->label()`](#labels) returns.
+
 ```php
 TaskStatus::options(); // [0 => 'Incomplete', 1 => 'Completed', 2 => 'Canceled']
 Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscriber', 'GUEST' => 'Guest']
 ```
 
 #### Tables
+
+This helper returns a list of case map array that each instance, if instance append attributes that extended [`Meta`](#meta), the map array including more.
 
 ```php
 TaskStatus::tables(); // [['name' => 'INCOMPLETE', 'value' => 0], ['name' => 'COMPLETED', 'value' => 1], ['name' => 'CANCELED', 'value' => 2]]
@@ -161,6 +165,8 @@ Role::tryFromName('TESTER'); // null
 
 #### Random
 
+This helper returns an instance of case by random.
+
 ```php
 TaskStatus::random(); // TaskStatus::COMPLETED
 Role::random(); // Role::GUEST
@@ -168,7 +174,7 @@ Role::random(); // Role::GUEST
 
 ### Meta
 
-This feature lets you add meta data to enum cases.
+This feature lets you add meta data to enum cases, it's used by way of attributes.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
@@ -189,9 +195,9 @@ enum TaskStatus: int
 }
 ```
 
-#### Creating meta properties
+#### Creating meta attributes
 
-Each meta property (= attribute used on a case) needs to exist as a class.
+Each meta attribute needs to exist as a class.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
@@ -204,6 +210,7 @@ class Description extends Meta {}
 ```
 
 Inside the class, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
+
 ```php
 #[Attribute]
 class Description extends Meta
@@ -212,7 +219,7 @@ class Description extends Meta
 }
 ```
 
-With the code above, the description of a case will be accessible as `TaskStatus::INCOMPLETE->note()`.
+With the code above, the `->description()` of a case will be accessible as `->note()`.
 
 Another thing you can customize is the passed value. For instance, to wrap a color name like `text-{$color}-500`, you'd add the following `transform()` method:
 ```php
@@ -233,56 +240,69 @@ TaskStatus::COMPLETED->color(); // 'text-green-500'
 
 #### Access the metadata
 
+By accessing the attribute method name, you can get the meta value:
+
 ```php
 TaskStatus::INCOMPLETE->description(); // 'Incomplete Task'
 TaskStatus::COMPLETED->color(); // 'green'
 ```
 
+Also, [`::tables()`](#tables) static method can return all meta attribute maps on each instance.
+
 ```php
 TaskStatus::tables(); 
 /*
-[
     [
-        'name' => 'INCOMPLETE', 
-        'value' => 0, 
-        'description' => 'Incomplete Task', 
-        'color' => 'red'
-    ], 
-    [
-        'name' => 'COMPLETED', 
-        'value' => 1, 
-        'description' => 'Completed Task', 
-        'color' => 'green'
-    ], 
-    [
-        'name' => 'CANCELED', 
-        'value' => 2, 
-        'description' => 'Canceled Task', 
-        'color' => 'gray'
+        [
+            'name' => 'INCOMPLETE', 
+            'value' => 0, 
+            'description' => 'Incomplete Task', 
+            'color' => 'red'
+        ], 
+        [
+            'name' => 'COMPLETED', 
+            'value' => 1, 
+            'description' => 'Completed Task', 
+            'color' => 'green'
+        ], 
+        [
+            'name' => 'CANCELED', 
+            'value' => 2, 
+            'description' => 'Canceled Task', 
+            'color' => 'gray'
+        ]
     ]
-]
 */
 ```
 
+Similarly, you can also get the enum case instance through the meta instance.
+
 #### Use the `fromMeta()` method
 ```php
-TaskStatus::fromMeta(Color::make('green')); // TaskStatus::COMPLETED
-TaskStatus::fromMeta(Color::make('blue')); // Error: ValueError
+$green = Color::make('green');// new Color('green');
+$blue = Color::make('blue');// new Color('blue');
+
+TaskStatus::fromMeta($green); // TaskStatus::COMPLETED
+TaskStatus::fromMeta($blue); // Error: ValueError
 ```
 
 #### Use the `tryFromMeta()` method
 ```php
-TaskStatus::tryFromMeta(Color::make('green')); // TaskStatus::COMPLETED
-TaskStatus::tryFromMeta(Color::make('blue')); // null
+TaskStatus::tryFromMeta($green); // TaskStatus::COMPLETED
+TaskStatus::tryFromMeta($blue); // null
 ```
 
 ## Validation
 
+Usually, we need limit your application's incoming data to a specified enums, laravel provides the basic rule, but here we have perfected it.
+
 ### Array Validation
+
+You can use the 'array' syntax for rules.
 
 #### Enumerate
 
-Additionally, you can validate that a parameter is an instance of a given enum.
+Validate that a parameter is an instance of a given enum, it's similar to [`Enum Rules`](https://laravel.com/docs/10.x/validation#rule-enum) and can support pure enums.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
@@ -290,12 +310,15 @@ use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
 public function store(Request $request)
 {
     $this->validate($request, [
-        'statuses' => ['required', new Enumerate(TaskStatus::class)],
+        'status' => ['required', new Enumerate(TaskStatus::class)],
+        'role' => ['required', new Enumerate(Role::class)],
     ]);
 }
 ```
 
 #### Enum meta
+
+Additionally, validate that a parameter is an instance of the given meta in the given enum.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
@@ -308,15 +331,21 @@ public function store(Request $request)
 }
 ```
 
+`EnumMeta` rule takes two parameters, the first is given enum, the second is given meta, if parameter name is same of meta method name, you can omit it:  
+
+```php
+['color' => ['required', new EnumMeta(TaskStatus::class)]]
+```
+
 ### Pipe Validation
 
 You can also use the 'pipe' syntax for rules.
 
-**enumerate**:_enum_class_
-**enum_meta**_:enum_class,[meta_attribute]_
+- **enumerate**: _enum_class_
+- **enum_meta**: _enum_class,[meta_attribute]_
 
 ```php
-'statuses' => 'required|enumerate:' . TaskStatus::class,
+'status' => 'required|enumerate:' . TaskStatus::class,
 'color' => 'required|enum_meta:' . TaskStatus::class . ',' . Color::class,
 ```
 
@@ -330,9 +359,9 @@ Run the following command to publish the language files to your `lang` folder.
 php artisan vendor:publish --provider="BiiiiiigMonster\LaravelEnum\EnumServiceProvider" --tag="translations"
 ```
 
-### Enum labels
+### Labels
 
-You can translate the strings returned by the `label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
+You can translate the strings returned by the `->label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
 
 Add a new `enums.php` keys file for each of your supported languages. In this example there is one for English and one for Spanish.
 
@@ -378,11 +407,12 @@ use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 
 enum TaskStatus: int implements Localizable
 {
+    use EnumTraits;
     // ...
 }
 ```
 
-The `label()` method will now look for the value in your localization files:
+The `->label()` method will now look for the value in your localization files:
 
 ```php
 // en/enums.php
@@ -392,7 +422,7 @@ TaskStatus::CANCELED->label();// 'Canceled'
 TaskStatus::CANCELED->label();// 'Cancelación'
 ```
 
-and `options()` static method returned array's value also be localized:
+and the [`::options()`](#options) static method returned array's value also be localized:
 
 ```php
 // en/enums.php
@@ -412,7 +442,7 @@ By default, all Enums in `app/Enums` will be annotated (you can change the folde
 php artisan enum:annotate
 ```
 
-You can annotate a single class by specifying the class name
+Also, you can annotate a single class by specifying the class name
 
 ```bash
 php artisan enum:annotate "App\Enums\TaskStatus"
@@ -420,7 +450,7 @@ php artisan enum:annotate "App\Enums\TaskStatus"
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-use App\Enums\Meta\{Description, Color};
+use App\Enums\Metas\{Description, Color};
 
 /**
  * @method static int INCOMPLETE()
@@ -432,15 +462,7 @@ use App\Enums\Meta\{Description, Color};
 enum TaskStatus: int
 {
     use EnumTraits;
-
-    #[Description('Incomplete Task')] #[Color('red')]
-    case INCOMPLETE = 0;
-
-    #[Description('Completed Task')] #[Color('green')]
-    case COMPLETED = 1;
-
-    #[Description('Canceled Task')] #[Color('gray')]
-    case CANCELED = 2;
+    // ...
 }
 ```
 
