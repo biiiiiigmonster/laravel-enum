@@ -19,32 +19,7 @@ composer require biiiiiigmonster/laravel-enum
 
 ## Usage
 
-### Invokable
-
-This helper lets you get the primitive value of a backed enum, or the name of a pure enum, by "invoking" it — either statically (`MyEnum::FOO()` instead of `MyEnum::FOO`), or as an instance (`$enum()`).
-
-That way, you can use enums as array keys:
-```php
-'statuses' => [
-    TaskStatus::INCOMPLETE() => ['some configuration'],
-    TaskStatus::COMPLETED() => ['some configuration'],
-],
-```
-
-Or access the underlying primitives for any other use cases:
-```php
-public function updateStatus(int $status): void;
-
-$task->updateStatus(TaskStatus::COMPLETED());
-```
-
-The main point: this is all without having to append `->value` to everything:
-```php
-MyEnum::FOO; // => MyEnum instance
-MyEnum::FOO(); // => 1
-```
-
-#### Apply the trait on your enum
+Apply the trait on your enum
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 
@@ -67,6 +42,31 @@ enum Role
     case SUBSCRIBER;
     case GUEST;
 }
+```
+
+### Invokable
+
+This helper lets you get the primitive value of a backed enum, or the name of a pure enum, by "invoking" it — either statically (`MyEnum::FOO()` instead of `MyEnum::FOO`), or as an instance (`$enum()`).
+
+That way, you can use enums as array keys:
+```php
+'statuses' => [
+    TaskStatus::INCOMPLETE() => ['some configuration'],
+    TaskStatus::COMPLETED() => ['other configuration'],
+],
+```
+
+Or access the underlying primitives for any other use cases:
+```php
+public function updateStatus(int $status): void;
+
+$task->updateStatus(TaskStatus::COMPLETED());
+```
+
+The main point: this is all without having to append `->value` to everything:
+```php
+TaskStatus::CANCELED; // => TaskStatus instance
+TaskStatus::CANCELED(); // => 2
 ```
 
 #### Use static calls to get the primitive value
