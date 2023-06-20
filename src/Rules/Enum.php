@@ -7,7 +7,7 @@ use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class Enumerate implements ValidationRule
+class Enum implements ValidationRule
 {
     public function __construct(protected string $enum)
     {
@@ -33,7 +33,7 @@ class Enumerate implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enumerate')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enum')->translate();
         }
     }
 }

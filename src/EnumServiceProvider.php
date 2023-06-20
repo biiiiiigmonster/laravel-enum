@@ -3,14 +3,14 @@
 namespace BiiiiiigMonster\LaravelEnum;
 
 use BiiiiiigMonster\LaravelEnum\Commands\EnumAnnotateCommand;
-use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
+use BiiiiiigMonster\LaravelEnum\Rules\Enum;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 class EnumServiceProvider extends ServiceProvider
 {
-    const LANG_NAMESPACE = __NAMESPACE__;
+    const LANG_NAMESPACE = 'enum';
 
     public function boot(): void
     {
@@ -29,8 +29,8 @@ class EnumServiceProvider extends ServiceProvider
     private function bootValidators(): void
     {
         Validator::extend('enumerate', function ($attribute, $value, $parameters, $validator) {
-            return (new Enumerate(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE.'::validation.enumerate'));
+            return (new Enum(...$parameters))->passes($attribute, $value);
+        }, trans(static::LANG_NAMESPACE.'::validation.enum'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
@@ -40,7 +40,7 @@ class EnumServiceProvider extends ServiceProvider
     private function bootTranslations(): void
     {
         $this->publishes([
-            __DIR__.'/../lang' => $this->app->langPath('vendor/laravelEnum'),
+            __DIR__.'/../lang' => $this->app->langPath('vendor/'.static::LANG_NAMESPACE),
         ], 'translations');
 
         $this->loadTranslationsFrom(__DIR__.'/../lang', static::LANG_NAMESPACE);

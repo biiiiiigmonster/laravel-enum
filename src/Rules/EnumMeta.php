@@ -34,7 +34,6 @@ class EnumMeta implements ValidationRule
 
         if ($this->meta) {
             $value = new $this->meta($value);
-            $attribute = null;
         }
 
         return ! is_null($this->enum::tryFromMeta($value, $attribute));

@@ -300,23 +300,23 @@ Usually, we need limit your application's incoming data to a specified enums, la
 
 You can use the 'array' syntax for rules.
 
-#### Enumerate
+#### Enum
 
 Validate that a parameter is an instance of a given enum, it's similar to [`Enum Rules`](https://laravel.com/docs/10.x/validation#rule-enum) and can support pure enums.
 
 ```php
-use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
+use BiiiiiigMonster\LaravelEnum\Rules\Enum;
 
 public function store(Request $request)
 {
     $this->validate($request, [
-        'status' => ['required', new Enumerate(TaskStatus::class)],
-        'role' => ['required', new Enumerate(Role::class)],
+        'status' => ['required', new Enum(TaskStatus::class)],
+        'role' => ['required', new Enum(Role::class)],
     ]);
 }
 ```
 
-#### Enum meta
+#### EnumMeta
 
 Additionally, validate that a parameter is an instance of the given meta in the given enum.
 
@@ -349,21 +349,24 @@ You can also use the 'pipe' syntax for rules.
 'color' => 'required|enum_meta:' . TaskStatus::class . ',' . Color::class,
 ```
 
-## Localization
-
 ### Validation messages
 
-Run the following command to publish the language files to your `lang` folder.
+If needed, you can modify the error message when validated fails.
+
+Run the following command to publish the language files to your `lang` folder:
 
 ```
 php artisan vendor:publish --provider="BiiiiiigMonster\LaravelEnum\EnumServiceProvider" --tag="translations"
 ```
 
+## Localization
+
 ### Labels
 
-You can translate the strings returned by the `->label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
+The enum instances are descriptive, and we have added translation capabilities for this.
+You can translate the strings returned by the enum instance's `->label()` method using Laravel's built-in [localization](https://laravel.com/docs/localization) features.
 
-Add a new `enums.php` keys file for each of your supported languages. In this example there is one for English and one for Spanish.
+Add a new `enums.php` keys file for each of your supported languages. In this example there is one for English and one for Spanish:
 
 ```php
 // lang/en/enums.php
