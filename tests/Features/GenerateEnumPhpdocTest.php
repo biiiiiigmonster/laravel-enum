@@ -15,11 +15,13 @@ it('can generate method docComment for enums', function () {
             });
     });
 
-    $this->artisan('enum:annotate', ['enum' => Week::class]);
+    $this->artisan('enum:phpdoc', ['enum' => Week::class]);
 
     expect($filePutContents)
-        ->toContain('@method static int SUNDAY()')
-        ->toContain('@method static int SATURDAY()')
-        ->toContain('@method mixed description()')
-        ->toContain('@method string help()');
+        ->toContain(
+            '@method static int SUNDAY()',
+            '@method static int SATURDAY()',
+            '@method mixed description()',
+            '@method string help()',
+        );
 });

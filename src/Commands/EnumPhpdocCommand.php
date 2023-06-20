@@ -26,14 +26,14 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Finder\Finder;
 use UnitEnum;
 
-#[AsCommand(name: 'enum:annotate')]
-class EnumAnnotateCommand extends Command
+#[AsCommand(name: 'enum:phpdoc')]
+class EnumPhpdocCommand extends Command
 {
-    protected $signature = 'enum:annotate
-                            {enum?* : The enum class to generate annotations for}
-                            {--folder=* : The folder to scan for enums to annotate}';
+    protected $signature = 'enum:phpdoc
+                            {enum?* : The enum class to generate PHPDoc for}
+                            {--folder=* : The folder to scan for enums to generate PHPDoc}';
 
-    protected $description = 'Generate DocBlock annotations of meta method for enum classes';
+    protected $description = 'Generate PHP DocBlock of static case method and meta method for enum classes';
 
     protected Filesystem $filesystem;
 
@@ -58,7 +58,7 @@ class EnumAnnotateCommand extends Command
                         sprintf('The given class must be use trait of %s: %s', EnumTraits::class, $className)
                     );
                 }
-                $this->annotate($className);
+                $this->phpdoc($className);
             }
 
             return;
@@ -68,7 +68,7 @@ class EnumAnnotateCommand extends Command
             new Reader($file, $classVisitor = new ClassVisitor());
             $className = $classVisitor->getName();
             if (enum_exists($className) && in_array(EnumTraits::class, class_uses_recursive($className))) {
-                $this->annotate($className);
+                $this->phpdoc($className);
             }
         }
     }
@@ -76,7 +76,7 @@ class EnumAnnotateCommand extends Command
     /**
      * @throws ReflectionException|FileNotFoundException
      */
-    protected function annotate(string $className): void
+    protected function phpdoc(string $className): void
     {
         $reflection = new ReflectionEnum($className);
 

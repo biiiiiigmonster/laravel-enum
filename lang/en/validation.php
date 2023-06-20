@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'enumerate' => 'The selected name :attribute is invalid.',
-    'enum_meta' => 'The selected meta :attribute is invalid.',
+    'enum' => 'The selected enum :attribute is invalid.',
+    'enum_meta' => 'The selected enum meta :attribute is invalid.',
 ];

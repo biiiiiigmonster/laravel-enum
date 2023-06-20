@@ -1,6 +1,6 @@
 <?php
 
-use BiiiiiigMonster\LaravelEnum\Rules\Enumerate;
+use BiiiiiigMonster\LaravelEnum\Rules\Enum;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Color;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Week;
@@ -11,14 +11,14 @@ it('validate failed message when the enum case name not match', function () {
         'today' => 1,
     ];
     $ruler = [
-        'today' => ['required', new Enumerate(Week::class)],
+        'today' => ['required', new Enum(Week::class)],
     ];
     $messages = Validator::make($param, $ruler)->messages()->messages();
 
     expect($messages)
         ->toHaveKey('today')
         ->and($messages['today'])
-        ->toContain('The selected name today is invalid.');
+        ->toContain('The selected enum today is invalid.');
 });
 
 it('validate failed message when the enum case name match, using string pipe validation', function () {
@@ -33,7 +33,7 @@ it('validate failed message when the enum case name match, using string pipe val
     expect($messages)
         ->toHaveKey('today')
         ->and($messages['today'])
-        ->toContain('The selected name today is invalid.');
+        ->toContain('The selected enum today is invalid.');
 });
 
 it('validate failed message when the enum have not meta class match', function () {
@@ -48,7 +48,7 @@ it('validate failed message when the enum have not meta class match', function (
     expect($messages)
         ->toHaveKey('color')
         ->and($messages['color'])
-        ->toContain('The selected meta color is invalid.');
+        ->toContain('The selected enum meta color is invalid.');
 });
 
 it('validate failed message when the enum case meta properties matches, using string pipe validation', function () {
@@ -64,5 +64,5 @@ it('validate failed message when the enum case meta properties matches, using st
     expect($messages)
         ->toHaveKey('color')
         ->and($messages['color'])
-        ->toContain('The selected meta color is invalid.');
+        ->toContain('The selected enum meta color is invalid.');
 });
