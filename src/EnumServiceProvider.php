@@ -2,7 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum;
 
-use BiiiiiigMonster\LaravelEnum\Commands\EnumAnnotateCommand;
+use BiiiiiigMonster\LaravelEnum\Commands\EnumPhpdocCommand;
 use BiiiiiigMonster\LaravelEnum\Rules\Enum;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +22,7 @@ class EnumServiceProvider extends ServiceProvider
     private function bootCommands(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands(EnumAnnotateCommand::class);
+            $this->commands(EnumPhpdocCommand::class);
         }
     }
 

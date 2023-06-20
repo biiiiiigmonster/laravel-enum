@@ -442,13 +442,13 @@ If you want your IDE to autocomplete the static instantiation helpers, you can g
 By default, all Enums in `app/Enums` will be annotated (you can change the folder by passing a path to `--folder`)
 
 ```bash
-php artisan enum:annotate
+php artisan enum:phpdoc
 ```
 
 Also, you can annotate a single class by specifying the class name
 
 ```bash
-php artisan enum:annotate "App\Enums\TaskStatus"
+php artisan enum:phpdoc "App\Enums\TaskStatus"
 ```
 
 ```php
