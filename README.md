@@ -479,6 +479,11 @@ composer test
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
+## References
+
+- [archtechx/enums](https://github.com/archtechx/enums)
+- [BenSampo/laravel-enum](https://github.com/BenSampo/laravel-enum)
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
