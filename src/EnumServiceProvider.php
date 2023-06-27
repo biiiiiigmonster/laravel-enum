@@ -28,15 +28,13 @@ class EnumServiceProvider extends ServiceProvider
 
     private function bootValidators(): void
     {
-        echo '看看enum字符串：' . trans(static::LANG_NAMESPACE . '::validation.enum');
         Validator::extend('enum', function ($attribute, $value, $parameters, $validator) {
             return (new Enum(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE . '::validation.enum'));
+        }, trans(static::LANG_NAMESPACE . '::message.enum'));
 
-        echo '看看enum_meta字符串：' . trans(static::LANG_NAMESPACE . '::validation.enum_meta');
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE . '::validation.enum_meta'));
+        }, trans(static::LANG_NAMESPACE . '::message.enum_meta'));
     }
 
     private function bootTranslations(): void
