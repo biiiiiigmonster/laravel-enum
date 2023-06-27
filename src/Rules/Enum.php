@@ -14,7 +14,6 @@ class Enum implements ValidationRule
 
     public function passes(string $attribute, mixed $value): bool
     {
-        echo 'this is today?'.$attribute;
         if (! enum_exists($this->enum)) {
             return false;
         }
