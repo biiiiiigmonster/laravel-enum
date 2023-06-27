@@ -19,12 +19,12 @@ class Enum implements ValidationRule
             return false;
         }
 
-        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
-            return false;
-        }
-
         if ($value instanceof $this->enum) {
             return true;
+        }
+
+        if (! method_exists($this->enum, 'tryFrom')) {
+            return false;
         }
 
         return ! is_null($this->enum::tryFrom($value));

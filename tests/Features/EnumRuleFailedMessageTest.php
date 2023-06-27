@@ -26,7 +26,7 @@ it('validate failed message when the enum case name match, using string pipe val
         'today' => 1,
     ];
     $ruler = [
-        'today' => 'required|enumerate:'.Week::class,
+        'today' => 'required|enum:'.Week::class,
     ];
     $messages = Validator::make($param, $ruler)->messages()->messages();
 
