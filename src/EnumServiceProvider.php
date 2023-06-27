@@ -30,19 +30,19 @@ class EnumServiceProvider extends ServiceProvider
     {
         Validator::extend('enum', function ($attribute, $value, $parameters, $validator) {
             return (new Enum(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE . '::message.enum'));
+        }, trans(static::LANG_NAMESPACE.'::message.enum'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE . '::message.enum_meta'));
+        }, trans(static::LANG_NAMESPACE.'::message.enum_meta'));
     }
 
     private function bootTranslations(): void
     {
         $this->publishes([
-            __DIR__ . '/../lang' => $this->app->langPath('vendor/' . static::LANG_NAMESPACE),
+            __DIR__.'/../lang' => $this->app->langPath('vendor/'.static::LANG_NAMESPACE),
         ], 'translations');
 
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', static::LANG_NAMESPACE);
+        $this->loadTranslationsFrom(__DIR__.'/../lang', static::LANG_NAMESPACE);
     }
 }
