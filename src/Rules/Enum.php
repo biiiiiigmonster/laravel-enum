@@ -2,7 +2,6 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Rules;
 
-use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\EnumServiceProvider;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
