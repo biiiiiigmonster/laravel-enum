@@ -342,11 +342,11 @@ public function store(Request $request)
 
 You can also use the 'pipe' syntax for rules.
 
-- **enum**: _enum_class_
+- **enumerate**: _enum_class_
 - **enum_meta**: _enum_class,[meta_attribute]_
 
 ```php
-'status' => 'required|enum:' . TaskStatus::class,
+'status' => 'required|enumerate:' . TaskStatus::class,
 'color' => 'required|enum_meta:' . TaskStatus::class . ',' . Color::class,
 ```
 
