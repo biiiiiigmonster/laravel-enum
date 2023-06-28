@@ -20,7 +20,7 @@ it('can validate value by the enum case name match', function () use ($param) {
 
 it('can validate value by the enum case name match, using string pipe validation', function () use ($param) {
     $ruler = [
-        'role' => 'required|enum:'.Role::class,
+        'role' => 'required|enumerate:'.Role::class,
     ];
 
     expect(Validator::make($param, $ruler)->passes())->toBeTrue();
