@@ -20,19 +20,19 @@ class EnumMeta implements ValidationRule
             return false;
         }
 
-        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
-            return false;
-        }
-
         if ($value instanceof $this->enum) {
             return true;
         }
 
-        if ($this->meta && ! is_subclass_of($this->meta, Meta::class)) {
+        if (! in_array(EnumTraits::class, trait_uses_recursive($this->enum))) {
             return false;
         }
 
         if ($this->meta) {
+            if (! is_subclass_of($this->meta, Meta::class)) {
+                return false;
+            }
+
             $value = new $this->meta($value);
         }
 
@@ -42,7 +42,7 @@ class EnumMeta implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validation.enum_meta')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::validations.enum_meta')->translate();
         }
     }
 }

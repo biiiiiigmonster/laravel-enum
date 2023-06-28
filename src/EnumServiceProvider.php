@@ -30,11 +30,11 @@ class EnumServiceProvider extends ServiceProvider
     {
         Validator::extend('enumerate', function ($attribute, $value, $parameters, $validator) {
             return (new Enum(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE.'::validation.enum'));
+        }, trans(static::LANG_NAMESPACE.'::validations.enumerate'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE.'::validation.enum_meta'));
+        }, trans(static::LANG_NAMESPACE.'::validations.enum_meta'));
     }
 
     private function bootTranslations(): void

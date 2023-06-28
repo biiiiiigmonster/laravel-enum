@@ -250,34 +250,35 @@ TaskStatus::COMPLETED->color(); // 'green'
 Also, [`::tables()`](#tables) static method can return all meta attribute maps on each instance.
 
 ```php
-TaskStatus::tables(); 
-/*
+$tables = TaskStatus::tables();
+
+// $tables
+[
     [
-        [
-            'name' => 'INCOMPLETE', 
-            'value' => 0, 
-            'description' => 'Incomplete Task', 
-            'color' => 'red'
-        ], 
-        [
-            'name' => 'COMPLETED', 
-            'value' => 1, 
-            'description' => 'Completed Task', 
-            'color' => 'green'
-        ], 
-        [
-            'name' => 'CANCELED', 
-            'value' => 2, 
-            'description' => 'Canceled Task', 
-            'color' => 'gray'
-        ]
+        'name' => 'INCOMPLETE', 
+        'value' => 0, 
+        'description' => 'Incomplete Task', 
+        'color' => 'red'
+    ], 
+    [
+        'name' => 'COMPLETED', 
+        'value' => 1, 
+        'description' => 'Completed Task', 
+        'color' => 'green'
+    ], 
+    [
+        'name' => 'CANCELED', 
+        'value' => 2, 
+        'description' => 'Canceled Task', 
+        'color' => 'gray'
     ]
-*/
+]
 ```
+
+#### Use the `fromMeta()` method
 
 Similarly, you can also get the enum case instance through the meta instance.
 
-#### Use the `fromMeta()` method
 ```php
 $green = Color::make('green');// new Color('green');
 $blue = Color::make('blue');// new Color('blue');
@@ -334,7 +335,7 @@ public function store(Request $request)
 `EnumMeta` rule takes two parameters, the first is given enum, the second is given meta, if parameter name is same of meta method name, you can omit it:  
 
 ```php
-['color' => ['required', new EnumMeta(TaskStatus::class)]]
+'color' => ['required', new EnumMeta(TaskStatus::class)],
 ```
 
 ### Pipe Validation
