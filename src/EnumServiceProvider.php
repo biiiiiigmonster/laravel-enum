@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 
 class EnumServiceProvider extends ServiceProvider
 {
-    const LANG_NAMESPACE = 'laravelEnum';
+    const LANG_NAMESPACE = 'enum';
 
     public function boot(): void
     {
@@ -30,11 +30,11 @@ class EnumServiceProvider extends ServiceProvider
     {
         Validator::extend('enum', function ($attribute, $value, $parameters, $validator) {
             return (new Enum(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE.'::messages.enum'));
+        }, trans(static::LANG_NAMESPACE.'::validations.enumeration'));
 
         Validator::extend('enum_meta', function ($attribute, $value, $parameters, $validator) {
             return (new EnumMeta(...$parameters))->passes($attribute, $value);
-        }, trans(static::LANG_NAMESPACE.'::messages.enum_meta'));
+        }, trans(static::LANG_NAMESPACE.'::validations.enum_meta'));
     }
 
     private function bootTranslations(): void
