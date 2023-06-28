@@ -32,7 +32,7 @@ class Enum implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->passes($attribute, $value)) {
-            $fail(EnumServiceProvider::LANG_NAMESPACE.'::message.enum')->translate();
+            $fail(EnumServiceProvider::LANG_NAMESPACE.'::messages.enum')->translate();
         }
     }
 }
