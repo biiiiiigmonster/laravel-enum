@@ -44,30 +44,16 @@ trait EnumTraits
 
     public static function tables(): array
     {
-        $allMetaMethods = collect(static::cases())
-            ->flatMap(fn (UnitEnum $case) => $case->metas())
-            ->map(fn (Meta $meta) => $meta::method())
-            ->unique()
-            ->all();
-
         return collect(static::cases())
-            ->map(function (UnitEnum $case) use ($allMetaMethods) {
-                /** @var static $case */
-                $map = collect($case->metas())
-                    ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
-                    ->merge(['name' => $case->name])
-                    ->when($case instanceof BackedEnum,
-                        fn (Collection $collection) => $collection
-                            ->merge(['value' => $case->value])
-                    )
-                    ->all();
-
-                foreach ($allMetaMethods as $method) {
-                    $map[$method] = $map[$method] ?? null;
-                }
-
-                return $map;
-            })
+            ->map(fn (UnitEnum $case) => collect($case->metas())
+                ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
+                ->merge(['name' => $case->name])
+                ->when($case instanceof BackedEnum,
+                    fn (Collection $collection) => $collection
+                        ->merge(['value' => $case->value])
+                )
+                ->all()
+            )
             ->all();
     }
 
