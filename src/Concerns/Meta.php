@@ -28,6 +28,6 @@ abstract class Meta
             return static::${'alias'};
         }
 
-        return str(static::class)->afterLast('\\')->lcfirst();
+        return str(static::class)->classBasename()->lcfirst();
     }
 }
