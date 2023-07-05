@@ -112,7 +112,7 @@ trait EnumTraits
     public static function default(): ?static
     {
         return collect(static::cases())
-            ->first(function (UnitEnum $case){
+            ->first(function (UnitEnum $case) {
                 $rfe = new ReflectionEnumUnitCase($case, $case->name);
                 foreach ($rfe->getAttributes() as $attribute) {
                     if ($attribute->getName() === DefaultCase::class) {
