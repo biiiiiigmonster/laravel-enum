@@ -164,7 +164,7 @@ class EnumPhpdocCommand extends Command
 
     protected function getClassFinder(): Finder
     {
-        $scanPaths = $this->option('folder') ?? app_path('Enums');
+        $scanPaths = $this->option('folder') ?: app_path('Enums');
 
         return Finder::create()->files()->in((array) $scanPaths)->name('*.php');
     }
