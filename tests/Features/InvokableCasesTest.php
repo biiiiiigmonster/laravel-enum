@@ -5,8 +5,8 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
 it('can be used as a static method with backed enums', function () {
-    expect(Status::PENDING())->toBe(0)
-        ->and(Status::DONE())->toBe(1);
+    expect(Status::PENDING())->toBe(1)
+        ->and(Status::DONE())->toBe(2);
 });
 
 it('can be used as a static method with pure enums', function () {
@@ -17,7 +17,7 @@ it('can be used as a static method with pure enums', function () {
 it('can be invoked as an instance as a backed enum', function () {
     $status = Status::PENDING;
 
-    expect($status())->toBe(0)
+    expect($status())->toBe(1)
         ->and($status())->toBe($status->value);
 });
 

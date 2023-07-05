@@ -12,7 +12,7 @@ it('can select a case by name with from() for pure enums', function () {
 });
 
 it('can select a case by name with from() for backed enums', function () {
-    expect(Status::from(0))
+    expect(Status::from(1))
         ->toBe(Status::PENDING);
 });
 

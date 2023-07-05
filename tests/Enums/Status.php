@@ -19,9 +19,9 @@ enum Status: int
     use EnumTraits;
 
     #[Color('orange')] #[Desc('Incomplete task')]
-    case PENDING = 0;
+    case PENDING = 1;
 
     #[Color('green')] #[Desc('Completed task')]
     #[Instructions('Illegal meta property — not enabled on the enum')]
-    case DONE = 1;
+    case DONE = 2;
 }
