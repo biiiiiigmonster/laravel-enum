@@ -17,19 +17,9 @@ class ClassVisitor extends NodeVisitorAbstract
      */
     private ?string $className = null;
 
-    /**
-     * Class is interface.
-     */
-    private bool $interface = false;
-
     public function getName(): string
     {
         return sprintf('%s\\%s', $this->namespace, $this->className);
-    }
-
-    public function isInterface(): bool
-    {
-        return $this->interface;
     }
 
     /**
@@ -39,10 +29,8 @@ class ClassVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof Node\Stmt\Namespace_) {
             $this->namespace = $node->name?->toString();
-        } elseif ($node instanceof Node\Stmt\Class_) {
+        } elseif ($node instanceof Node\Stmt\ClassLike) {
             $this->className = $node->name?->toString();
-        } elseif ($node instanceof Node\Stmt\Interface_) {
-            $this->interface = true;
         }
 
         return $node;

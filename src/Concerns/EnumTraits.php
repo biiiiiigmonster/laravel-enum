@@ -37,8 +37,9 @@ trait EnumTraits
         return collect(static::cases())
             ->flatMap(fn (UnitEnum $case) =>
                 /** @var static $case */
-                [$case() => $case->label()]
+                [$case->label() => $case()]
             )
+            ->flip()
             ->all();
     }
 
