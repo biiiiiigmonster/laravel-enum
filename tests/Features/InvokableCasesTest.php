@@ -27,10 +27,10 @@ it('can be invoked as an instance as a pure enum', function () {
     expect($role())->toBe('ADMIN');
 });
 
-it('throws an error when a nonexistent case is being used for backed enums', function () {
+it('throws an exception when a nonexistent case is being used for backed enums', function () {
     Status::INVALID();
 })->throws(UndefinedCaseException::class);
 
-it('throws an error when a nonexistent case is being used for pure enums', function () {
+it('throws an exception when a nonexistent case is being used for pure enums', function () {
     Role::INVALID();
 })->throws(UndefinedCaseException::class);
