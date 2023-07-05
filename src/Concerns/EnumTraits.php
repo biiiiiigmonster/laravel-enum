@@ -109,6 +109,21 @@ trait EnumTraits
         return Arr::random(static::cases());
     }
 
+    public static function default(): ?static
+    {
+        return collect(static::cases())
+            ->first(function (UnitEnum $case){
+                $rfe = new ReflectionEnumUnitCase($case, $case->name);
+                foreach ($rfe->getAttributes() as $attribute) {
+                    if ($attribute->getName() === DefaultCase::class) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+    }
+
     /**
      * @return Meta[]
      */
