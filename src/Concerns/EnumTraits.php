@@ -5,7 +5,7 @@ namespace BiiiiiigMonster\LaravelEnum\Concerns;
 use BackedEnum;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
-use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
+use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -104,9 +104,13 @@ trait EnumTraits
             );
     }
 
-    public static function random(): static
+    public static function random(): ?static
     {
-        return Arr::random(static::cases());
+        if (empty($cases = static::cases())) {
+            return null;
+        }
+
+        return Arr::random($cases);
     }
 
     /**
@@ -114,9 +118,10 @@ trait EnumTraits
      */
     public function metas(): array
     {
+        $metas = [];
+
         /** @var UnitEnum $this */
         $rfe = new ReflectionEnumUnitCase($this, $this->name);
-        $metas = [];
         foreach ($rfe->getAttributes() as $attribute) {
             $instance = $attribute->newInstance();
             if ($instance instanceof Meta) {
@@ -151,11 +156,14 @@ trait EnumTraits
             ?->value;
     }
 
+    /**
+     * @throws UndefinedCaseException
+     */
     public static function __callStatic($name, $args): int|string
     {
         $case = collect(static::cases())
             ->first(fn (UnitEnum $case) => $case->name === $name)
-            ?? throw new UndefinedCaseError(static::class, $name);
+            ?? throw new UndefinedCaseException(static::class, $name);
 
         return $case();
     }

@@ -1,6 +1,6 @@
 <?php
 
-use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseError;
+use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseException;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
@@ -29,8 +29,8 @@ it('can be invoked as an instance as a pure enum', function () {
 
 it('throws an error when a nonexistent case is being used for backed enums', function () {
     Status::INVALID();
-})->throws(UndefinedCaseError::class);
+})->throws(UndefinedCaseException::class);
 
 it('throws an error when a nonexistent case is being used for pure enums', function () {
     Role::INVALID();
-})->throws(UndefinedCaseError::class);
+})->throws(UndefinedCaseException::class);
