@@ -34,26 +34,28 @@ trait EnumTraits
 
     public static function options(): array
     {
-        return collect(static::cases())
-            ->flatMap(fn (UnitEnum $case) =>
-                /** @var static $case */
-                [$case->label() => $case()]
-            )
-            ->flip()
-            ->all();
+        $keys = collect(static::cases())
+            ->map(fn (UnitEnum $case) => /** @var static $case */ $case());
+
+        $values = collect(static::cases())
+            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->label());
+
+        return $keys->combine($values)->all();
     }
 
     public static function tables(): array
     {
         return collect(static::cases())
-            ->map(fn (UnitEnum $case) => collect($case->metas())
-                ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
-                ->merge(['name' => $case->name])
-                ->when($case instanceof BackedEnum,
-                    fn (Collection $collection) => $collection
-                        ->merge(['value' => $case->value])
-                )
-                ->all()
+            ->map(fn (UnitEnum $case) =>
+                /** @var static $case */
+                collect($case->metas())
+                    ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
+                    ->merge(['name' => $case->name])
+                    ->when($case instanceof BackedEnum,
+                        fn (Collection $collection) => $collection
+                            ->merge(['value' => $case->value])
+                    )
+                    ->all()
             )
             ->all();
     }
@@ -120,7 +122,6 @@ trait EnumTraits
     {
         $metas = [];
 
-        /** @var UnitEnum $this */
         $rfe = new ReflectionEnumUnitCase($this, $this->name);
         foreach ($rfe->getAttributes() as $attribute) {
             $instance = $attribute->newInstance();
@@ -134,7 +135,7 @@ trait EnumTraits
 
     public function getLocalizationKey(): string
     {
-        return 'enums.'.$this::class.'.'.$this();
+        return 'enums.'.static::class.'.'.$this();
     }
 
     public function label(): string
