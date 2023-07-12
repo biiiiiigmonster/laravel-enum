@@ -83,13 +83,13 @@ trait EnumTraits
             ->first(fn (UnitEnum $case) => $case->name === $name);
     }
 
-    public static function fromMeta(mixed $value, ?string $method = null): static
+    public static function fromMeta(mixed $value, string $method = null): static
     {
         return static::tryFromMeta($value, $method)
             ?? throw new MetaValueError(static::class, $value, $method);
     }
 
-    public static function tryFromMeta(mixed $value, ?string $method = null): ?static
+    public static function tryFromMeta(mixed $value, string $method = null): ?static
     {
         if ($value instanceof Meta) {
             $method = $value::method();
