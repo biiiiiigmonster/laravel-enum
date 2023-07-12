@@ -1,5 +1,6 @@
 <?php
 
+use BiiiiiigMonster\LaravelEnum\Tests\Enums\EmptyCase;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 use Pest\Expectation;
@@ -22,3 +23,7 @@ it('can return an indexed array of tables from a pure enum', function () {
             ->toHaveKeys(['name', 'color', 'description', 'help']);
     }
 });
+
+it('can return an empty tables array from an enum of empty case')
+    ->expect(EmptyCase::tables())
+    ->toBeEmpty();

@@ -1,5 +1,6 @@
 <?php
 
+use BiiiiiigMonster\LaravelEnum\Tests\Enums\EmptyCase;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
@@ -18,3 +19,7 @@ it('can return an array of options from a pure enum', function () {
             'GUEST' => 'Guest',
         ]);
 });
+
+it('can return an empty options array from an enum of empty case')
+    ->expect(EmptyCase::options())
+    ->toBeEmpty();
