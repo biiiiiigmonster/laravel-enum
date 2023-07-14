@@ -44,8 +44,13 @@ trait EnumTraits
 
     public static function tables(): array
     {
-        return collect(static::cases())
-            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->map())
+        $tables = collect(static::cases())
+            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->map());
+
+        $allKeys = $tables->collapse()->map(fn() => null);
+
+        return $tables
+            ->map(fn($map) => $allKeys->diffKeys($map)->merge($map)->all())
             ->all();
     }
 
@@ -89,9 +94,8 @@ trait EnumTraits
             ->first(fn (UnitEnum $case) =>
                 /** @var static $case */
                 collect($case->metas())
-                    ->filter(fn (Meta $attr) => $attr::method() === $method
+                    ->contains(fn (Meta $attr) => $attr::method() === $method
                         && $attr->value === $value)
-                    ->isNotEmpty()
             );
     }
 
