@@ -47,10 +47,10 @@ trait EnumTraits
         $tables = collect(static::cases())
             ->map(fn (UnitEnum $case) => /** @var static $case */ $case->map());
 
-        $allKeys = $tables->collapse()->map(fn() => null);
+        $allKeys = $tables->collapse()->map(fn () => null);
 
         return $tables
-            ->map(fn($map) => $allKeys->diffKeys($map)->merge($map)->all())
+            ->map(fn ($map) => $allKeys->diffKeys($map)->merge($map)->all())
             ->all();
     }
 

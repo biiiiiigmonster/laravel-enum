@@ -3,7 +3,6 @@
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\EmptyCase;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
-use Pest\Expectation;
 
 it('can return an indexed array of tables from a backed enum', function () {
     foreach (Status::tables() as $table) {
