@@ -114,8 +114,22 @@ Role::values(); // ['ADMINISTRATOR', 'SUBSCRIBER', 'GUEST']
 This helper returns an array, that key is each instance invoke `()` return, and value is instance [`->label()`](#labels) returns.
 
 ```php
-TaskStatus::options(); // [0 => 'Incomplete', 1 => 'Completed', 2 => 'Canceled']
-Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscriber', 'GUEST' => 'Guest']
+TaskStatus::options(); 
+/*
+    [
+        0 => 'Incomplete', 
+        1 => 'Completed', 
+        2 => 'Canceled'
+    ]
+*/
+Role::options(); 
+/*
+    [
+        'ADMINISTRATOR' => 'Administrator', 
+        'SUBSCRIBER' => 'Subscriber', 
+        'GUEST' => 'Guest'
+    ]
+*/
 ```
 
 #### Tables
@@ -123,8 +137,22 @@ Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscr
 This helper returns a list of case map array that each instance, if instance append attributes that extended [`Meta`](#meta), the map array including more.
 
 ```php
-TaskStatus::tables(); // [['name' => 'INCOMPLETE', 'value' => 0], ['name' => 'COMPLETED', 'value' => 1], ['name' => 'CANCELED', 'value' => 2]]
-Role::tables(); // [['name' => 'ADMINISTRATOR'], ['name' => 'SUBSCRIBER'], ['name' => 'GUEST']]
+TaskStatus::tables(); 
+/*
+    [
+        ['name' => 'INCOMPLETE', 'value' => 0], 
+        ['name' => 'COMPLETED', 'value' => 1], 
+        ['name' => 'CANCELED', 'value' => 2]
+    ]
+*/
+Role::tables(); 
+/*
+    [
+        ['name' => 'ADMINISTRATOR'], 
+        ['name' => 'SUBSCRIBER'], 
+        ['name' => 'GUEST']
+    ]
+*/
 ```
 
 #### From
@@ -197,10 +225,11 @@ enum TaskStatus: int
 
 #### Creating meta attributes
 
-Each meta attribute needs to exist as a class.
+Each meta attribute needs to exist as an Attribute.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
+use Attribute;
 
 #[Attribute]
 class Color extends Meta {}
@@ -209,7 +238,7 @@ class Color extends Meta {}
 class Description extends Meta {}
 ```
 
-Inside the class, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
+Inside the attribute, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
 
 ```php
 #[Attribute]
