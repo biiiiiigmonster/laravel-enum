@@ -432,7 +432,7 @@ return [
 ];
 ```
 
-Now, you just need to make sure that your enum implements the `Localized` interface as demonstrated below:
+Now, you just need to make sure that your enum implements the `Localizable` interface as demonstrated below:
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;

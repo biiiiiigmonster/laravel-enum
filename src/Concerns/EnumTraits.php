@@ -8,7 +8,6 @@ use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use ReflectionEnumUnitCase;
 use UnitEnum;
 use ValueError;
@@ -45,18 +44,13 @@ trait EnumTraits
 
     public static function tables(): array
     {
-        return collect(static::cases())
-            ->map(fn (UnitEnum $case) =>
-                /** @var static $case */
-                collect($case->metas())
-                    ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
-                    ->merge(['name' => $case->name])
-                    ->when($case instanceof BackedEnum,
-                        fn (Collection $collection) => $collection
-                            ->merge(['value' => $case->value])
-                    )
-                    ->all()
-            )
+        $tables = collect(static::cases())
+            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->map());
+
+        $allKeys = $tables->collapse()->map(fn () => null);
+
+        return $tables
+            ->map(fn ($map) => $allKeys->merge($map)->all())
             ->all();
     }
 
@@ -100,9 +94,8 @@ trait EnumTraits
             ->first(fn (UnitEnum $case) =>
                 /** @var static $case */
                 collect($case->metas())
-                    ->filter(fn (Meta $attr) => $attr::method() === $method
+                    ->contains(fn (Meta $attr) => $attr::method() === $method
                         && $attr->value === $value)
-                    ->isNotEmpty()
             );
     }
 
@@ -133,6 +126,18 @@ trait EnumTraits
         return $metas;
     }
 
+    public function map(): array
+    {
+        return collect($this->metas())
+            ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
+            ->merge(['name' => $this->name])
+            ->when($this instanceof BackedEnum,
+                fn (Collection $collection) => $collection
+                    ->merge(['value' => $this->value])
+            )
+            ->all();
+    }
+
     public function getLocalizationKey(): string
     {
         return 'enums.'.static::class.'.'.$this();
@@ -142,7 +147,7 @@ trait EnumTraits
     {
         return $this instanceof Localizable
             ? trans($this->getLocalizationKey())
-            : Str::of($this->name)->lower()->studly();
+            : str($this->name)->lower()->studly();
     }
 
     public function __invoke(): int|string
