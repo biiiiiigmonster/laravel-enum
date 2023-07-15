@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+
+enum {{ class }}
+{
+    use EnumTraits;
+}
