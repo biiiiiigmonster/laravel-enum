@@ -19,6 +19,12 @@ composer require biiiiiigmonster/laravel-enum
 
 ## Usage
 
+Create enum class
+```shell
+php artisan make:enum TaskStatus
+php artisan make:enum Role
+```
+
 Apply the trait on your enum
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
