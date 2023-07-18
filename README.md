@@ -19,19 +19,22 @@ composer require biiiiiigmonster/laravel-enum
 
 ## Usage
 
-Apply the trait on your enum
+To get started, enums typically live in the `app\Enums` directory. You may use the `make:enum` Artisan command to generate a new enum:
+
+```shell
+php artisan make:enum TaskStatus
+```
+
+if you want to generate a [backed](https://www.php.net/manual/en/language.enumerations.backed.php) enum, you may use the `make:enum` Artisan command with `--type` options:
+
+```shell
+php artisan make:enum TaskStatus --type=int
+```
+
+and also you can apply the trait on your exists enum:
+
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-
-// backed enum.
-enum TaskStatus: int
-{
-    use EnumTraits;
-
-    case INCOMPLETE = 0;
-    case COMPLETED = 1;
-    case CANCELED = 2;
-}
 
 // pure enum.
 enum Role
@@ -41,6 +44,16 @@ enum Role
     case ADMINISTRATOR;
     case SUBSCRIBER;
     case GUEST;
+}
+
+// backed enum.
+enum TaskStatus: int
+{
+    use EnumTraits;
+
+    case INCOMPLETE = 0;
+    case COMPLETED = 1;
+    case CANCELED = 2;
 }
 ```
 
