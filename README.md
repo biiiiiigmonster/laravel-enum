@@ -19,10 +19,12 @@ composer require biiiiiigmonster/laravel-enum
 
 ## Usage
 
-Create enum class
+Create enum class and specify the type
+
 ```shell
-php artisan make:enum TaskStatus
-php artisan make:enum Role
+php artisan make:enum TaskStatus --type=int
+# or
+php artisan make:enum TaskStatus --type=string
 ```
 
 Apply the trait on your enum
