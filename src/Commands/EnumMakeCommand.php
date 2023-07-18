@@ -41,24 +41,24 @@ class EnumMakeCommand extends GeneratorCommand
 
         return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
             ? $customPath
-            : __DIR__ . $relativePath;
+            : __DIR__.$relativePath;
     }
 
     /**
      * Get the default namespace for the class.
      *
-     * @param string $rootNamespace
+     * @param  string  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Enums';
+        return $rootNamespace.'\Enums';
     }
 
     /**
      * Build the class with the given name and data type.
      *
-     * @param string $name
+     * @param  string  $name
      * @return string
      */
     protected function buildClass($name)
@@ -83,8 +83,7 @@ class EnumMakeCommand extends GeneratorCommand
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists'],
-            ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type']
+            ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type'],
         ];
     }
 }
-
