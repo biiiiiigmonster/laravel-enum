@@ -41,7 +41,7 @@ class EnumMakeCommand extends GeneratorCommand
 
         return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
             ? $customPath
-            : __DIR__.$relativePath;
+            : __DIR__ . $relativePath;
     }
 
     /**
@@ -56,6 +56,25 @@ class EnumMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Build the class with the given name and data type.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function buildClass($name)
+    {
+        return str_replace(
+            ['{{ type }}'],
+            match ($this->option('type')) {
+                'string' => ': string',
+                'int', 'integer' => ': int',
+                default => ''
+            },
+            parent::buildClass($name)
+        );
+    }
+
+    /**
      * Get the console command arguments.
      *
      * @return array
@@ -64,6 +83,7 @@ class EnumMakeCommand extends GeneratorCommand
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists'],
+            ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type']
         ];
     }
 }
