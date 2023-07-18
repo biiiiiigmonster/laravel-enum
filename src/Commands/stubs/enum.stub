@@ -4,7 +4,7 @@ namespace {{ namespace }};
 
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 
-enum {{ class }}
+enum {{ class }}{{ type }}
 {
     use EnumTraits;
 }
