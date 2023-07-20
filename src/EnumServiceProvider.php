@@ -24,7 +24,7 @@ class EnumServiceProvider extends ServiceProvider
     private function bootCommands(): void
     {
         $this->publishes([
-            __DIR__ . '/Commands/stubs' => $this->app->basePath('stubs'),
+            __DIR__.'/Commands/stubs' => $this->app->basePath('stubs'),
         ], 'stubs');
 
         if ($this->app->runningInConsole()) {
