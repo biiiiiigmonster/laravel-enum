@@ -238,7 +238,13 @@ enum TaskStatus: int
 
 #### Creating meta attributes
 
-Each meta attribute needs to exist as an Attribute.
+To generate a new meta attributes, you may use the `make:enumMeta` Artisan command:
+
+```shell
+php artisan make:enumMeta Color
+```
+
+meta attribute needs to exist as an Attribute.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
