@@ -2,6 +2,8 @@
 
 namespace BiiiiiigMonster\LaravelEnum;
 
+use BiiiiiigMonster\LaravelEnum\Commands\EnumMakeCommand;
+use BiiiiiigMonster\LaravelEnum\Commands\EnumMetaMakeCommand;
 use BiiiiiigMonster\LaravelEnum\Commands\EnumPhpdocCommand;
 use BiiiiiigMonster\LaravelEnum\Rules\Enum;
 use BiiiiiigMonster\LaravelEnum\Rules\EnumMeta;
@@ -21,8 +23,16 @@ class EnumServiceProvider extends ServiceProvider
 
     private function bootCommands(): void
     {
+        $this->publishes([
+            __DIR__ . '/Commands/stubs' => $this->app->basePath('stubs'),
+        ], 'stubs');
+
         if ($this->app->runningInConsole()) {
-            $this->commands(EnumPhpdocCommand::class);
+            $this->commands([
+                EnumPhpdocCommand::class,
+                EnumMakeCommand::class,
+                EnumMetaMakeCommand::class,
+            ]);
         }
     }
 
