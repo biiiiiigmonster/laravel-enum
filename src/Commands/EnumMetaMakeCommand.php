@@ -6,29 +6,29 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'make:enum')]
-class EnumMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:enumMeta')]
+class EnumMetaMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:enum';
+    protected $name = 'make:enumMeta';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new custom enum class';
+    protected $description = 'Create a new custom enum meta attribute.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Enum';
+    protected $type = 'EnumMeta';
 
     /**
      * Get the stub file for the generator.
@@ -37,7 +37,7 @@ class EnumMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        $relativePath = '/stubs/enum.stub';
+        $relativePath = '/stubs/enum_meta.stub';
 
         return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
             ? $customPath
@@ -52,26 +52,7 @@ class EnumMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Enums';
-    }
-
-    /**
-     * Build the class with the given name and data type.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function buildClass($name)
-    {
-        return str_replace(
-            ['{{ type }}'],
-            match ($this->option('type')) {
-                'string' => ': string',
-                'int', 'integer' => ': int',
-                default => ''
-            },
-            parent::buildClass($name)
-        );
+        return $rootNamespace.'\Enums\Metas';
     }
 
     /**
@@ -82,8 +63,7 @@ class EnumMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists'],
-            ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum meta already exists'],
         ];
     }
 }
