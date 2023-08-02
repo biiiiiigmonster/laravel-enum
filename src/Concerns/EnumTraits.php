@@ -50,7 +50,7 @@ trait EnumTraits
         $allKeys = $tables->collapse()->map(fn () => null);
 
         return $tables
-            ->map(fn ($map) => $allKeys->merge($map))
+            ->map(fn ($map) => $allKeys->merge($map)->all())
             ->all();
     }
 
