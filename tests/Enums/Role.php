@@ -2,6 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Tests\Enums;
 
+use BiiiiiigMonster\LaravelEnum\Concerns\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Color;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
@@ -21,6 +22,7 @@ enum Role
     #[Color('indigo')]
     #[Desc('Administrator')]
     #[Instructions('Administrators can manage the entire account')]
+    #[DefaultCase]
     case ADMIN;
 
     #[Color('gray')]
