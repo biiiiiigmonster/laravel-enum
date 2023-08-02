@@ -61,8 +61,9 @@ class EnumMakeCommand extends GeneratorCommand
     /**
      * Build the class with the given name and data type.
      *
-     * @param string $name
+     * @param  string  $name
      * @return string
+     *
      * @throws FileNotFoundException
      */
     protected function buildClass($name)
