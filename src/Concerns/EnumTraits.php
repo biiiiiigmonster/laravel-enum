@@ -45,12 +45,12 @@ trait EnumTraits
     public static function tables(): array
     {
         $tables = collect(static::cases())
-            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->maps());
+            ->map(fn (UnitEnum $case) => /** @var static $case */ $case->map());
 
         $allKeys = $tables->collapse()->map(fn () => null);
 
         return $tables
-            ->map(fn ($map) => $allKeys->merge($map))
+            ->map(fn ($map) => $allKeys->merge($map)->all())
             ->all();
     }
 
@@ -126,7 +126,7 @@ trait EnumTraits
         return $metas;
     }
 
-    public function maps(): array
+    public function map(): array
     {
         return collect($this->metas())
             ->flatMap(fn (Meta $meta) => [$meta::method() => $meta->value])
