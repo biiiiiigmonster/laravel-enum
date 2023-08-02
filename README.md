@@ -213,9 +213,31 @@ TaskStatus::random(); // TaskStatus::COMPLETED
 Role::random(); // Role::GUEST
 ```
 
+#### Default Case
+有时你可能需要为你的枚举类指定默认值，这很容易，就像下面这样将`#[DefaultCase]`注解追加在case上：
+```php
+use BiiiiiigMonster\LaravelEnum\Concerns\DefaultCase;
+use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+
+enum Role
+{
+    use EnumTraits;
+    
+    #[DefaultCase]
+    case ADMIN;
+    
+    case GUEST;
+}
+```
+
+然后使用`default`静态方法就能获取到这个case实例。
+```php
+Role::default(); // Role::ADMIN
+```
+
 ### Meta
 
-This feature lets you add meta data to enum cases, it's used by way of attributes.
+This feature lets you add metadata to enum cases, it's used by way of attributes.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
