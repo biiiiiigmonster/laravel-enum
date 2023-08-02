@@ -7,7 +7,7 @@ use ValueError;
 
 class MetaValueError extends ValueError
 {
-    public function __construct(string $enum, mixed $value, ?string $method = null)
+    public function __construct(string $enum, mixed $value, string $method = null)
     {
         if ($value instanceof Meta) {
             $method = $value::class;

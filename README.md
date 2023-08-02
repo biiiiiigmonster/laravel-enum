@@ -19,19 +19,22 @@ composer require biiiiiigmonster/laravel-enum
 
 ## Usage
 
-Apply the trait on your enum
+To get started, enums typically live in the `app\Enums` directory. You may use the `make:enum` Artisan command to generate a new enum:
+
+```shell
+php artisan make:enum TaskStatus
+```
+
+if you want to generate a [backed](https://www.php.net/manual/en/language.enumerations.backed.php) enum, you may use the `make:enum` Artisan command with `--type` options:
+
+```shell
+php artisan make:enum TaskStatus --type=int
+```
+
+and also you can apply the trait on your exists enum:
+
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
-
-// backed enum.
-enum TaskStatus: int
-{
-    use EnumTraits;
-
-    case INCOMPLETE = 0;
-    case COMPLETED = 1;
-    case CANCELED = 2;
-}
 
 // pure enum.
 enum Role
@@ -41,6 +44,16 @@ enum Role
     case ADMINISTRATOR;
     case SUBSCRIBER;
     case GUEST;
+}
+
+// backed enum.
+enum TaskStatus: int
+{
+    use EnumTraits;
+
+    case INCOMPLETE = 0;
+    case COMPLETED = 1;
+    case CANCELED = 2;
 }
 ```
 
@@ -114,8 +127,22 @@ Role::values(); // ['ADMINISTRATOR', 'SUBSCRIBER', 'GUEST']
 This helper returns an array, that key is each instance invoke `()` return, and value is instance [`->label()`](#labels) returns.
 
 ```php
-TaskStatus::options(); // [0 => 'Incomplete', 1 => 'Completed', 2 => 'Canceled']
-Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscriber', 'GUEST' => 'Guest']
+TaskStatus::options(); 
+/*
+    [
+        0 => 'Incomplete', 
+        1 => 'Completed', 
+        2 => 'Canceled'
+    ]
+*/
+Role::options(); 
+/*
+    [
+        'ADMINISTRATOR' => 'Administrator', 
+        'SUBSCRIBER' => 'Subscriber', 
+        'GUEST' => 'Guest'
+    ]
+*/
 ```
 
 #### Tables
@@ -123,8 +150,22 @@ Role::options(); // ['ADMINISTRATOR' => 'Administrator', 'SUBSCRIBER' => 'Subscr
 This helper returns a list of case map array that each instance, if instance append attributes that extended [`Meta`](#meta), the map array including more.
 
 ```php
-TaskStatus::tables(); // [['name' => 'INCOMPLETE', 'value' => 0], ['name' => 'COMPLETED', 'value' => 1], ['name' => 'CANCELED', 'value' => 2]]
-Role::tables(); // [['name' => 'ADMINISTRATOR'], ['name' => 'SUBSCRIBER'], ['name' => 'GUEST']]
+TaskStatus::tables(); 
+/*
+    [
+        ['name' => 'INCOMPLETE', 'value' => 0], 
+        ['name' => 'COMPLETED', 'value' => 1], 
+        ['name' => 'CANCELED', 'value' => 2]
+    ]
+*/
+Role::tables(); 
+/*
+    [
+        ['name' => 'ADMINISTRATOR'], 
+        ['name' => 'SUBSCRIBER'], 
+        ['name' => 'GUEST']
+    ]
+*/
 ```
 
 #### From
@@ -197,10 +238,17 @@ enum TaskStatus: int
 
 #### Creating meta attributes
 
-Each meta attribute needs to exist as a class.
+To generate a new meta attributes, you may use the `make:enumMeta` Artisan command:
+
+```shell
+php artisan make:enumMeta Color
+```
+
+meta attribute needs to exist as an Attribute.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
+use Attribute;
 
 #[Attribute]
 class Color extends Meta {}
@@ -209,7 +257,7 @@ class Color extends Meta {}
 class Description extends Meta {}
 ```
 
-Inside the class, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
+Inside the attribute, you can customize a few things. For instance, you may want to use a different method name than the one derived from the class name (`Description` becomes `description()` by default). To do that, define the `alias` static property on the meta:
 
 ```php
 #[Attribute]
@@ -403,7 +451,7 @@ return [
 ];
 ```
 
-Now, you just need to make sure that your enum implements the `Localized` interface as demonstrated below:
+Now, you just need to make sure that your enum implements the `Localizable` interface as demonstrated below:
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
@@ -414,6 +462,12 @@ enum TaskStatus: int implements Localizable
     use EnumTraits;
     // ...
 }
+```
+
+Alternatively, when creating with the `make:enum` Artisan command, add the `--local` option:
+
+```shell
+php artisan make:enum TaskStatus --local
 ```
 
 The `->label()` method will now look for the value in your localization files:

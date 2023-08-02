@@ -1,0 +1,12 @@
+<?php
+
+namespace {{ namespace }};
+
+use Attribute;
+use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
+
+#[Attribute]
+class {{ class }} extends Meta
+{
+
+}
