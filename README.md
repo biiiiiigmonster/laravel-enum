@@ -464,6 +464,12 @@ enum TaskStatus: int implements Localizable
 }
 ```
 
+Alternatively, when creating with the `make:enum` Artisan command, add the `--local` option:
+
+```shell
+php artisan make:enum TaskStatus --local
+```
+
 The `->label()` method will now look for the value in your localization files:
 
 ```php
