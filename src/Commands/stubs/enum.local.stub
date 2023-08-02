@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
+
+enum {{ class }}{{ type }} implements Localizable
+{
+    use EnumTraits;
+}

@@ -3,6 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -37,11 +38,13 @@ class EnumMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        $relativePath = '/stubs/enum.stub';
+        $stub = $this->option('local')
+            ? '/stubs/enum.local.stub'
+            : '/stubs/enum.stub';
 
-        return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
-            : __DIR__.$relativePath;
+            : __DIR__.$stub;
     }
 
     /**
@@ -58,8 +61,9 @@ class EnumMakeCommand extends GeneratorCommand
     /**
      * Build the class with the given name and data type.
      *
-     * @param  string  $name
+     * @param string $name
      * @return string
+     * @throws FileNotFoundException
      */
     protected function buildClass($name)
     {
@@ -84,6 +88,7 @@ class EnumMakeCommand extends GeneratorCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists'],
             ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type'],
+            ['local', 'l', InputOption::VALUE_OPTIONAL, 'Generate a localizable enum'],
         ];
     }
 }
