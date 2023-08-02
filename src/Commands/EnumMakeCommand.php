@@ -89,7 +89,7 @@ class EnumMakeCommand extends GeneratorCommand
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists'],
             ['type', 't', InputOption::VALUE_OPTIONAL, 'Indicates that enum data type'],
-            ['local', 'l', InputOption::VALUE_OPTIONAL, 'Generate a localizable enum'],
+            ['local', 'l', InputOption::VALUE_NONE, 'Generate a localizable enum'],
         ];
     }
 }
