@@ -2,7 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Tests\Enums;
 
-use BiiiiiigMonster\LaravelEnum\Concerns\DefaultCase;
+use BiiiiiigMonster\LaravelEnum\Attributes\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Color;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;

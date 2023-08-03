@@ -214,9 +214,11 @@ Role::random(); // Role::GUEST
 ```
 
 #### Default Case
+
 Sometimes you may need to specify default case for your enum, which is easy as below: simply append the `#[DefaultCase]` attribute to the case:
+
 ```php
-use BiiiiiigMonster\LaravelEnum\Concerns\DefaultCase;
+use BiiiiiigMonster\LaravelEnum\Attributes\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 
 enum Role
@@ -231,6 +233,7 @@ enum Role
 ```
 
 Then use the `::default()` static method to get this case instance:
+
 ```php
 Role::default(); // Role::ADMIN
 

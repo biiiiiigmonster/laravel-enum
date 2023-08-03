@@ -1,6 +1,6 @@
 <?php
 
-namespace BiiiiiigMonster\LaravelEnum\Concerns;
+namespace BiiiiiigMonster\LaravelEnum\Attributes;
 
 use Attribute;
 

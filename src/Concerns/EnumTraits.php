@@ -3,6 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
+use BiiiiiigMonster\LaravelEnum\Attributes\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseException;
