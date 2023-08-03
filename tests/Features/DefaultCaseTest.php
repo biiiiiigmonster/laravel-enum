@@ -1,6 +1,5 @@
 <?php
 
-use BiiiiiigMonster\LaravelEnum\Tests\Enums\EmptyCase;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Role;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Status;
 
