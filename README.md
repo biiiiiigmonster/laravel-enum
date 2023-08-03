@@ -233,6 +233,8 @@ enum Role
 Then use the `::default()` static method to get this case instance:
 ```php
 Role::default(); // Role::ADMIN
+
+Role::ADMIN->isDefault(); // true
 ```
 
 ### Meta
