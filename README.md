@@ -214,7 +214,7 @@ Role::random(); // Role::GUEST
 ```
 
 #### Default Case
-有时你可能需要为你的枚举类指定默认值，这很容易，就像下面这样将`#[DefaultCase]`注解追加在case上：
+Sometimes you may need to specify default case for your enum, which is easy as below: simply append the `#[DefaultCase]` attribute to the case:
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
@@ -230,7 +230,7 @@ enum Role
 }
 ```
 
-然后使用`default`静态方法就能获取到这个case实例。
+Then use the `::default()` static method to get this case instance:
 ```php
 Role::default(); // Role::ADMIN
 ```

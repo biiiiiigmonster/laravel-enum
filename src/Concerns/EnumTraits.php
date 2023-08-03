@@ -111,16 +111,7 @@ trait EnumTraits
     public static function default(): ?static
     {
         return collect(static::cases())
-            ->first(function (UnitEnum $case) {
-                $rfe = new ReflectionEnumUnitCase($case, $case->name);
-                foreach ($rfe->getAttributes() as $attribute) {
-                    if ($attribute->getName() === DefaultCase::class) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
+            ->first(fn (UnitEnum $case) => /** @var static $case */ $case->isDefault());
     }
 
     /**
@@ -163,6 +154,18 @@ trait EnumTraits
         return $this instanceof Localizable
             ? trans($this->getLocalizationKey())
             : str($this->name)->lower()->studly();
+    }
+
+    public function isDefault(): bool
+    {
+        $rfe = new ReflectionEnumUnitCase($this, $this->name);
+        foreach ($rfe->getAttributes() as $attribute) {
+            if ($attribute->getName() === DefaultCase::class) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function __invoke(): int|string

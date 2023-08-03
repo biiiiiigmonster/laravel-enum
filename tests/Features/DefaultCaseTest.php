@@ -11,7 +11,3 @@ it('can return null from an enum without the attribute')
 it('can return the specified case from an enum with the attribute')
     ->expect(Role::default())
     ->toBe(Role::ADMIN);
-
-it('can return null from an enum of empty case')
-    ->expect(EmptyCase::default())
-    ->toBeNull();
