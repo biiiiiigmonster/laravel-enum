@@ -3,6 +3,7 @@
 namespace BiiiiiigMonster\LaravelEnum\Concerns;
 
 use BackedEnum;
+use BiiiiiigMonster\LaravelEnum\Attributes\DefaultCase;
 use BiiiiiigMonster\LaravelEnum\Contracts\Localizable;
 use BiiiiiigMonster\LaravelEnum\Exceptions\MetaValueError;
 use BiiiiiigMonster\LaravelEnum\Exceptions\UndefinedCaseException;
@@ -108,6 +109,12 @@ trait EnumTraits
         return Arr::random($cases);
     }
 
+    public static function default(): ?static
+    {
+        return collect(static::cases())
+            ->first(fn (UnitEnum $case) => /** @var static $case */ $case->isDefault());
+    }
+
     /**
      * @return Meta[]
      */
@@ -148,6 +155,18 @@ trait EnumTraits
         return $this instanceof Localizable
             ? trans($this->getLocalizationKey())
             : str($this->name)->lower()->studly();
+    }
+
+    public function isDefault(): bool
+    {
+        $rfe = new ReflectionEnumUnitCase($this, $this->name);
+        foreach ($rfe->getAttributes() as $attribute) {
+            if ($attribute->getName() === DefaultCase::class) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function __invoke(): int|string
