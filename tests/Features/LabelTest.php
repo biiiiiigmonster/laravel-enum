@@ -10,8 +10,9 @@ it('can get string label by one case from the enum', function () {
 });
 
 it('can get local string label by one case from the enum implements Localizable interface', function () {
-    expect(Week::SUNDAY->label())
+    $week = Week::SUNDAY;
+    expect($week->label())
         ->toBeString()
-        ->toBe(trans('enums.'.Week::class.'.0'))
-        ->toBe('enums.'.Week::class.'.0');
+        ->toBe(trans('enums.'.Week::class.'.'.$week()))
+        ->toBe('enums.'.Week::class.'.'.$week());
 });

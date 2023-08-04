@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 $param = [
     'role' => 'ADMIN',
-    'today' => 1,
+    'today' => 9,
 ];
 
 it('can validate value by the enum case name match', function () use ($param) {

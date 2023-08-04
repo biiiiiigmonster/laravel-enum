@@ -2,6 +2,7 @@
 
 namespace BiiiiiigMonster\LaravelEnum\Tests\Enums;
 
+use BiiiiiigMonster\LaravelEnum\Attributes\Sort;
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Color;
 use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Desc;
@@ -14,6 +15,8 @@ use BiiiiiigMonster\LaravelEnum\Tests\Enums\Metas\Instructions;
  * @method mixed description()
  * @method string help()
  */
+#[Sort('value')]
+#[Sort(Color::class, SORT_DESC)]
 enum Status: int
 {
     use EnumTraits;

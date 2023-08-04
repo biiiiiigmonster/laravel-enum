@@ -21,6 +21,7 @@ it('can generate method docComment for enums', function () {
         ->toContain(
             '@method static int SUNDAY()',
             '@method static int SATURDAY()',
+            '@method static int MONDAY()',
             '@method mixed description()',
             '@method string help()',
         );
