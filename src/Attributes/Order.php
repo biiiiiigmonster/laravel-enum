@@ -9,7 +9,6 @@ class Order
 {
     public function __construct(
         public string $value
-    )
-    {
+    ) {
     }
 }

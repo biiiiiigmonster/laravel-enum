@@ -9,8 +9,7 @@ class Sort
 {
     public function __construct(
         public string $value,
-        public int    $options = SORT_REGULAR
-    )
-    {
+        public int $options = SORT_REGULAR
+    ) {
     }
 }
