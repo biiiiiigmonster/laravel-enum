@@ -213,9 +213,36 @@ TaskStatus::random(); // TaskStatus::COMPLETED
 Role::random(); // Role::GUEST
 ```
 
+#### Default Case
+
+Sometimes you may need to specify default case for your enum, which is easy as below: simply append the `#[DefaultCase]` attribute to the case:
+
+```php
+use BiiiiiigMonster\LaravelEnum\Attributes\DefaultCase;
+use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
+
+enum Role
+{
+    use EnumTraits;
+    
+    #[DefaultCase]
+    case ADMIN;
+    
+    case GUEST;
+}
+```
+
+Then use the `::default()` static method to get this case instance:
+
+```php
+Role::default(); // Role::ADMIN
+
+Role::ADMIN->isDefault(); // true
+```
+
 ### Meta
 
-This feature lets you add meta data to enum cases, it's used by way of attributes.
+This feature lets you add metadata to enum cases, it's used by way of attributes.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\EnumTraits;
@@ -238,7 +265,13 @@ enum TaskStatus: int
 
 #### Creating meta attributes
 
-Each meta attribute needs to exist as an Attribute.
+To generate a new meta attributes, you may use the `make:enumMeta` Artisan command:
+
+```shell
+php artisan make:enumMeta Color
+```
+
+meta attribute needs to exist as an Attribute.
 
 ```php
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
@@ -456,6 +489,12 @@ enum TaskStatus: int implements Localizable
     use EnumTraits;
     // ...
 }
+```
+
+Alternatively, when creating with the `make:enum` Artisan command, add the `--local` option:
+
+```shell
+php artisan make:enum TaskStatus --local
 ```
 
 The `->label()` method will now look for the value in your localization files:
