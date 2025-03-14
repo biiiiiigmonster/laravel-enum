@@ -25,7 +25,7 @@ class Reader
      */
     public function __construct(SplFileInfo $file, NodeVisitor ...$visitors)
     {
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = (new ParserFactory())->createForHostVersion();
         $this->traverser = new NodeTraverser();
 
         $this->file = $file;
