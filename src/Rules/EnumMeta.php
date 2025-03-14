@@ -10,9 +10,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class EnumMeta implements ValidationRule
 {
-    public function __construct(protected string $enum, protected ?string $meta = null)
-    {
-    }
+    public function __construct(protected string $enum, protected ?string $meta = null) {}
 
     public function passes(string $attribute, mixed $value): bool
     {

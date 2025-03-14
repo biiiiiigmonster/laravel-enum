@@ -8,9 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class Enum implements ValidationRule
 {
-    public function __construct(protected string $enum)
-    {
-    }
+    public function __construct(protected string $enum) {}
 
     public function passes(string $attribute, mixed $value): bool
     {

@@ -6,6 +6,4 @@ use Attribute;
 use BiiiiiigMonster\LaravelEnum\Concerns\Meta;
 
 #[Attribute]
-class Color extends Meta
-{
-}
+class Color extends Meta {}

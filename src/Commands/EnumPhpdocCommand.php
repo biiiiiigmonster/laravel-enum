@@ -65,7 +65,7 @@ class EnumPhpdocCommand extends Command
         }
 
         foreach ($this->getClassFinder() as $file) {
-            new Reader($file, $classVisitor = new ClassVisitor());
+            new Reader($file, $classVisitor = new ClassVisitor);
             $className = $classVisitor->getName();
             if (enum_exists($className) && in_array(EnumTraits::class, class_uses_recursive($className))) {
                 $this->phpdoc($className);
@@ -87,7 +87,7 @@ class EnumPhpdocCommand extends Command
     {
         $docBlock = $reflection->getDocComment()
             ? DocBlockGenerator::fromReflection(new DocBlockReflection($reflection))
-            : new DocBlockGenerator();
+            : new DocBlockGenerator;
 
         $retainedTags = collect($docBlock->getTags())
             ->reject(fn (TagInterface $tag) => $tag instanceof MethodTag)
